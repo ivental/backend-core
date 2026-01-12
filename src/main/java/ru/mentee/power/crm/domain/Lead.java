@@ -34,9 +34,10 @@ public class Lead {
         this.company = company;
         this.status = status;
     }
+
     @Override
     public String toString() {
-        return "Lead{id='" + id + "', email='" + email + "', phone ='" + phone +"', " +
+        return "Lead{id='" + id + "', email='" + email + "', phone ='" + phone + "', " +
                 "company='" + company + "', status='" + status + "'}";
     }
 }
