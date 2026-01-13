@@ -14,6 +14,7 @@ repositories {
 ext {
     junitVersion = '5.12.0'
     assertjVersion = '3.26.3'
+    lombokVersion = '1.18.38'
 }
 
 
@@ -22,6 +23,8 @@ dependencies {
     testImplementation "org.junit.jupiter:junit-jupiter"
     testImplementation "org.assertj:assertj-core:${assertjVersion}"
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
 }
 
 application {
