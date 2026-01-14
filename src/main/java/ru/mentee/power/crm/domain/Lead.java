@@ -1,37 +1,24 @@
 package ru.mentee.power.crm.domain;
 
-import java.util.Objects;
 import java.util.UUID;
 
-public record Lead(
-        UUID id,
-        String email,
-        String phone,
-        String company,
-        String status
-) {
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Lead lead = (Lead) o;
-        return Objects.equals(id, lead.id)
-                && Objects.equals(email, lead.email)
-                && Objects.equals(phone, lead.phone)
-                && Objects.equals(company, lead.company)
-                && Objects.equals(status, lead.status);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, email, phone, company, status);
-    }
-
-    @Override
-    public String toString() {
-        return "Lead{id='" + id + "', email='" + email + "', phone ='" + phone + "', " +
-                "company='" + company + "', status='" + status + "'}";
+public record Lead(UUID id, Contact contact, String company, String status) {
+    public Lead {
+        if (id == null) {
+            throw new IllegalArgumentException("id не может быть пустым");
+        }
+        if (contact == null) {
+            throw new IllegalArgumentException("Контакт не может быть пустым");
+        }
+        if (company == null) {
+            throw new IllegalArgumentException("Компания не может быть пустой");
+        }
+        if (status == null) {
+            throw new IllegalArgumentException("Статус не может быть пустым");
+        }
+        if (!"NEW".equals(status) && !"QUALIFIED".equals(status) && ! "CONVERTED".equals(status)) {
+            throw new IllegalArgumentException("только \"NEW\", \"QUALIFIED\", \"CONVERTED\" разрешены");
+        }
     }
 }
 
