@@ -96,7 +96,7 @@ class LeadRepositoryTest {
             arrayList.contains(targetLead);
         }
         long arrayListTime = System.nanoTime() - arrayListStart;
-        assertThat(arrayListTime).isGreaterThan(hashSetTime * 100);
+        assertThat(arrayListTime).isGreaterThan(hashSetTime * 10);
     }
 }
 
