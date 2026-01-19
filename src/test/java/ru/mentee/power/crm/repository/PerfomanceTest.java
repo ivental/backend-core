@@ -1,9 +1,15 @@
 package ru.mentee.power.crm.repository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.mentee.power.crm.infrastructure.InMemoryLeadRepository;
+import ru.mentee.power.crm.model.Lead;
+import ru.mentee.power.crm.model.LeadStatus;
+
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.Optional;
+import java.util.UUID;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -14,23 +20,23 @@ public class PerfomanceTest {
 
     @BeforeEach
     void setUp() {
-        repository = new LeadRepository();
+        repository = new InMemoryLeadRepository();
     }
 
     @Test
     void shouldFindFasterWithMap_thanWithListFilter() {
-        List<ru.mentee.power.crm.model.Lead> leadList = new ArrayList<>();
-        String searchId = "lead-500";
-        ru.mentee.power.crm.model.Lead targetLead = null;
+        List<Lead> leadList = new ArrayList<>();
+        Lead targetLead = null;
+
 
         for (int i = 0; i < 1000; i++) {
-            String id = "lead-" + i;
-            ru.mentee.power.crm.model.Lead lead = new ru.mentee.power.crm.model.Lead(
-                    id,
+            UUID uuid = UUID.randomUUID();
+            Lead lead = new Lead(
+                    UUID.randomUUID(),
                     "email" + i + "@test.com",
                     "+7" + i,
                     "Company" + i,
-                    "NEW"
+                    LeadStatus.NEW
             );
 
             repository.save(lead);
@@ -42,17 +48,18 @@ public class PerfomanceTest {
         }
 
         long mapStart = System.nanoTime();
-        ru.mentee.power.crm.model.Lead foundInMap = repository.findById(searchId);
+        Optional<Lead> foundInMap = repository.findById(targetLead.id());
         long mapDuration = System.nanoTime() - mapStart;
 
         long listStart = System.nanoTime();
-        ru.mentee.power.crm.model.Lead foundInList = leadList.stream()
-                .filter(lead -> lead.id().equals(searchId))
+        final Lead finalTargetLead = targetLead;
+        Lead foundInList = leadList.stream()
+                .filter(lead -> lead.id().equals(finalTargetLead.id()))
                 .findFirst()
                 .orElse(null);
         long listDuration = System.nanoTime() - listStart;
 
-        assertThat(foundInMap).isEqualTo(targetLead);
+        assertThat(foundInMap).contains(targetLead);
         assertThat(foundInList).isEqualTo(targetLead);
         assertThat(listDuration).isGreaterThan(mapDuration * 10);
 
