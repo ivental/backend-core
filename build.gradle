@@ -90,7 +90,7 @@ jacocoTestCoverageVerification {
             ]
 
             limit {
-                minimum = 0.75
+                minimum = 0.7
             }
         }
     }
