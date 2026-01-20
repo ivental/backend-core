@@ -45,6 +45,6 @@ public class InMemoryLeadRepository implements LeadRepository {
     }
     @Override
     public int size() {
-        return storage.size(); // или emailIndex.size() - они синхронизированы
+        return storage.size();
     }
 }
