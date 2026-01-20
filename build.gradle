@@ -15,6 +15,7 @@ ext {
     junitVersion = '5.12.0'
     assertjVersion = '3.26.3'
     lombokVersion = '1.18.38'
+    mockitoVersion = '5.21.0'
 }
 
 
@@ -25,6 +26,8 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     compileOnly "org.projectlombok:lombok:${lombokVersion}"
     annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testImplementation "org.mockito:mockito-core:${mockitoVersion}"
+    testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
 }
 
 application {
