@@ -10,7 +10,7 @@ import ru.mentee.power.crm.servlet.LeadListServlet;
 import java.io.File;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception     {
 
         InMemoryLeadRepository repository = new InMemoryLeadRepository();
         LeadService leadService = new LeadService(repository);

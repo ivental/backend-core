@@ -1,8 +1,11 @@
 plugins {
+    id 'java'
     id 'application'
     id 'checkstyle'
     id 'jacoco'
     id 'gg.jte.gradle' version '3.1.15'
+    id 'org.springframework.boot' version '4.0.0'
+    id 'io.spring.dependency-management' version '1.1.5'
 }
 
 group = 'ru.mentee.power'
@@ -20,6 +23,7 @@ ext {
     servletVersion = '6.1.0'
     tomcatVersion = '11.0.1'
     jteVersion = '3.1.15'
+    springBootVersion = '4.0.0'
 }
 
 
@@ -36,6 +40,7 @@ dependencies {
     implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
     implementation "gg.jte:jte:${jteVersion}"
     implementation "gg.jte:jte-runtime:${jteVersion}"
+    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
 }
 
 jte {
