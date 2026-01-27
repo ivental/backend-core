@@ -1,4 +1,5 @@
 package ru.mentee.power.crm.service;
+
 import org.springframework.stereotype.Service;
 import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
@@ -7,6 +8,7 @@ import ru.mentee.power.crm.repository.LeadRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class LeadService {
@@ -21,8 +23,7 @@ public class LeadService {
         if (existingLead.isPresent()) {
             throw new IllegalStateException("email уже существует");
         }
-        Lead lead = new Lead(UUID.randomUUID(),email,null,company,status);
-
+        Lead lead = new Lead(UUID.randomUUID(), email, null, company, status);
         return repository.save(lead);
     }
 
@@ -37,4 +38,22 @@ public class LeadService {
     public Optional<Lead> findByEmail(String email) {
         return repository.findByEmail(email);
     }
+
+    public List<Lead> findByStatus(LeadStatus status) {
+        System.out.println("=== DEBUG findByStatus(" + status + ") ===");
+        List<Lead> allLeads = repository.findAll();
+        System.out.println("Всего лидов в репозитории: " + allLeads.size());
+
+        List<Lead> result = allLeads.stream()
+                .filter(lead -> {
+                    boolean matches = lead.status().equals(status);
+                    System.out.println("  " + lead.email() + " -> status=" + lead.status() + ", matches=" + matches);
+                    return matches;
+                })
+                .collect(Collectors.toList());
+
+        System.out.println("Найдено лидов с статусом " + status + ": " + result.size());
+        return result;
+    }
 }
+
