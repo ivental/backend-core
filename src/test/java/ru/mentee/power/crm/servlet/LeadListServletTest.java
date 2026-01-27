@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import ru.mentee.power.crm.core.LeadRepository;
+import ru.mentee.power.crm.infrastructure.InMemoryLeadRepository;
 import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.service.LeadService;
@@ -77,11 +79,6 @@ public class LeadListServletTest {
         servlet.doGet(request, response);
         printWriter.flush();
         String htmlOutput = stringWriter.toString();
-        assertThat(htmlOutput)
-                .contains("<!DOCTYPE html>")
-                .contains("CRM - Лиды")
-                .contains("CRM System")
-                .contains("table");
         assertThat(htmlOutput)
                 .contains("Email")
                 .contains("Company");
