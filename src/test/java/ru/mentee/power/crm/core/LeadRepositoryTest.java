@@ -98,6 +98,13 @@ class LeadRepositoryTest {
         long arrayListTime = System.nanoTime() - arrayListStart;
         assertThat(arrayListTime).isGreaterThan(hashSetTime * 10);
     }
+
+    @Test
+    void shouldBeEmpty_whenCreated() {
+        LeadRepository repo = new LeadRepository();
+        assertThat(repo.size()).isZero();
+        assertThat(repo.findAll()).isEmpty();
+    }
 }
 
 
