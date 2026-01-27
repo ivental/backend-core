@@ -3,9 +3,9 @@ plugins {
     id 'application'
     id 'checkstyle'
     id 'jacoco'
-    id 'gg.jte.gradle' version '3.1.15'
-    id 'org.springframework.boot' version '4.0.0'
-    id 'io.spring.dependency-management' version '1.1.5'
+    id 'gg.jte.gradle' version '3.2.0'
+    id 'org.springframework.boot' version '3.5.9'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'ru.mentee.power'
@@ -22,8 +22,9 @@ ext {
     mockitoVersion = '5.21.0'
     servletVersion = '6.1.0'
     tomcatVersion = '11.0.1'
-    jteVersion = '3.1.15'
-    springBootVersion = '4.0.0'
+    jteVersion = '3.2.1'
+    jteSpringBootVersion = '3.2.1'
+    springBootVersion = '3.5.9'
 }
 
 
@@ -41,16 +42,25 @@ dependencies {
     implementation "gg.jte:jte:${jteVersion}"
     implementation "gg.jte:jte-runtime:${jteVersion}"
     implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
+    implementation "gg.jte:jte-spring-boot-starter-3:${jteSpringBootVersion}"
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework:spring-test'
+
+
+
+
+
+
 }
 
 jte {
-    sourceDirectory = file("src/main/jte").toPath()
+    sourceDirectory = file("src/main/resources/jte").toPath()
     contentType = "Html"
     binaryStaticContent = false
 }
 
 application {
-    mainClass = 'ru.mentee.power.crm.Main'
+    mainClass = 'ru.mentee.power.crm.spring.Application'
 }
 
 java {
@@ -83,12 +93,15 @@ jacocoTestReport {
     }
     afterEvaluate {
         classDirectories.setFrom(files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: [
-                    'ru/mentee/power/crm/web/HelloCrmServer*',
-                    'ru/mentee/power/crm/Main*',
-                    'ru/mentee/power/crm/model/Lead*',
-                    'ru/mentee/power/crm/model/LeadStatus*',
-                    'ru/mentee/power/crm/domain/Repository*'
+            fileTree(dir: it, include: [
+                    'ru/mentee/power/crm/domain/**',
+                    'ru/mentee/power/crm/infrastructure/**',
+                    'ru/mentee/power/crm/service/**',
+                    'ru/mentee/power/crm/storage/**',
+                    'ru/mentee/power/crm/servlet/**',
+                    'ru/mentee/power/crm/spring/controller/**'
+            ], exclude: [
+                    'ru/mentee/power/crm/domain/Repository.class'
             ])
         }))
     }
@@ -100,16 +113,26 @@ jacocoTestCoverageVerification {
 
     violationRules {
         rule {
+            enabled = true
+            element = 'BUNDLE'
+
+            includes = [
+                    'ru.mentee.power.crm.domain.*',
+                    'ru.mentee.power.crm.infrastructure.*',
+                    'ru.mentee.power.crm.service.*',
+                    'ru.mentee.power.crm.storage.*',
+                    'ru.mentee.power.crm.servlet.*',
+                    'ru.mentee.power.crm.spring.controller.*'
+            ]
+
             excludes = [
-                    'ru.mentee.power.crm.web.HelloCrmServer*',
-                    'ru.mentee.power.crm.Main*',
-                    'ru.mentee.power.crm.model.Lead*',
-                    'ru.mentee.power.crm.model.LeadStatus*',
-                    'ru/mentee/power/crm/domain/Repository*'
+                    'ru.mentee.power.crm.domain.Repository'
             ]
 
             limit {
-                minimum = 0.7
+                counter = 'INSTRUCTION'
+                value = 'COVEREDRATIO'
+                minimum = 0.8
             }
         }
     }
