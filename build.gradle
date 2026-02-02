@@ -57,9 +57,8 @@ jte {
     sourceDirectory = file("src/main/resources/jte").toPath()
     contentType = "Html"
     binaryStaticContent = false
-
+    generate()
 }
-
 application {
     mainClass = 'ru.mentee.power.crm.spring.Application'
 }

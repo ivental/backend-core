@@ -13,19 +13,6 @@ public class InMemoryLeadRepository implements LeadRepository {
     private final Map<UUID, Lead> storage = new HashMap<>();
     private final Map<String, UUID> emailIndex = new HashMap<>();
 
-
-    @PostConstruct
-    public void init() {
-        save(new Lead(UUID.randomUUID(), "militech@mt.com", "+1-111-111-111",
-                "Militech", LeadStatus.NEW));
-        save(new Lead(UUID.randomUUID(), "umbrella@umbrella.com", "+6-666-666-666",
-                "Umbrella Inc.", LeadStatus.CONTACTED));
-        save(new Lead(UUID.randomUUID(), "arasaka@arasaka.com", "+7-777-777-777",
-                "Arasaka Inc.", LeadStatus.QUALIFIED));
-        save(new Lead(UUID.randomUUID(), "iventalll@gmail.com", "+7-911-911-91-11",
-                "Supa Corp", LeadStatus.NEW));
-    }
-
     @Override
     public Lead save(Lead lead) {
         storage.put(lead.id(), lead);

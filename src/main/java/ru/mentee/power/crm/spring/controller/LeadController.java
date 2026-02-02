@@ -20,28 +20,31 @@ public class LeadController {
         this.leadService = leadService;
     }
 
-    @GetMapping("/leads/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("lead", new Lead(null, "", null, "", LeadStatus.NEW));
-        return "leads/create";
-    }
-
-    @PostMapping("/leads")
-    public String createLead(@ModelAttribute Lead lead) {
-        leadService.addLead(lead.email(),lead.company(), lead.status());
-        return "redirect:/leads";
-    }
-
     @GetMapping("/leads")
     public String showLeads(
             @RequestParam(required = false) LeadStatus status,
             Model model
     ) {
+
         List<Lead> list = (status == null)
                 ? leadService.findAll()
                 : leadService.findByStatus(status);
         model.addAttribute("leads", list);
         model.addAttribute("currentFilter", status);
         return "leads/list";
+    }
+
+
+    @GetMapping("/leads/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("lead", new Lead(null, "", "", "", LeadStatus.NEW));
+        return "leads/create";
+    }
+
+
+    @PostMapping("/leads")
+    public String createLead(@ModelAttribute Lead lead) {
+        leadService.addLead(lead.email(), lead.phone(), lead.company(), lead.status());
+        return "redirect:/leads";
     }
 }
