@@ -9,16 +9,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50">
-    <header class="bg-blue-600 text-white p-4 shadow-md">
+<header class="bg-blue-600 text-white p-4 shadow-md">
+    <div class="container mx-auto">
         <h1 class="text-2xl font-bold">CRM System</h1>
-    </header>
+    </div>
+</header>
 
-    <main class="container mx-auto p-6">
-        ${content}
-    </main>
+<main class="container mx-auto p-6">
+    ${content}
+</main>
 
-    <footer class="bg-gray-800 text-white p-4 text-center mt-8">
-        <p>&copy; 2025 CRM Project</p>
-    </footer>
+<footer class="bg-gray-800 text-white p-4 text-center mt-8">
+    <p>&copy; 2025 CRM Project</p>
+</footer>
 </body>
 </html>

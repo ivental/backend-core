@@ -10,16 +10,16 @@ import ru.mentee.power.crm.servlet.LeadListServlet;
 import java.io.File;
 
 public class Main {
-    public static void main(String[] args) throws Exception     {
+    public static void main(String[] args) throws Exception {
 
         InMemoryLeadRepository repository = new InMemoryLeadRepository();
         LeadService leadService = new LeadService(repository);
 
-        leadService.addLead("ivental@gmail.com", "Megacorp", LeadStatus.NEW);
-        leadService.addLead("RE@umbrella.com", "Umbrella Inc", LeadStatus.CONTACTED);
-        leadService.addLead("arasaka@cp77.com", "Arasaka Corp", LeadStatus.QUALIFIED);
-        leadService.addLead("militech@mt.com", "Militech", LeadStatus.NEW);
-        leadService.addLead("java@java.com", "Java Corporation", LeadStatus.NEW);
+        leadService.addLead("ivental@gmail.com", "+7911", "Megacorp", LeadStatus.NEW);
+        leadService.addLead("RE@umbrella.com", "+7912", "Umbrella Inc", LeadStatus.CONTACTED);
+        leadService.addLead("arasaka@cp77.com", "+7913", "Arasaka Corp", LeadStatus.QUALIFIED);
+        leadService.addLead("militech@mt.com", "+7914","Militech", LeadStatus.NEW);
+        leadService.addLead("java@java.com", "+7915","Java Corporation", LeadStatus.NEW);
 
 
         System.out.println("Добавлены " + leadService.findAll().size() + " тестовых лидов");

@@ -18,12 +18,13 @@ public class LeadService {
         this.repository = repository;
     }
 
-    public Lead addLead(String email, String company, LeadStatus status) {
+    public Lead addLead(String email, String phone, String company, LeadStatus status) {
         Optional<Lead> existingLead = findByEmail(email);
         if (existingLead.isPresent()) {
             throw new IllegalStateException("email уже существует");
         }
-        Lead lead = new Lead(UUID.randomUUID(), email, null, company, status);
+
+        Lead lead = new Lead(UUID.randomUUID(), email, phone, company, status);
         return repository.save(lead);
     }
 
@@ -40,10 +41,7 @@ public class LeadService {
     }
 
     public List<Lead> findByStatus(LeadStatus status) {
-        System.out.println("=== DEBUG findByStatus(" + status + ") ===");
         List<Lead> allLeads = repository.findAll();
-        System.out.println("Всего лидов в репозитории: " + allLeads.size());
-
         List<Lead> result = allLeads.stream()
                 .filter(lead -> {
                     boolean matches = lead.status().equals(status);
@@ -51,8 +49,6 @@ public class LeadService {
                     return matches;
                 })
                 .collect(Collectors.toList());
-
-        System.out.println("Найдено лидов с статусом " + status + ": " + result.size());
         return result;
     }
 }
