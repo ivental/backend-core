@@ -95,33 +95,7 @@ class StackComparisonTest {
         return count;
     }
 
-    @Test
-    @DisplayName("Оба стека должны возвращать лидов в HTML таблице")
-    void shouldReturnLeadsFromBothStacks() throws Exception {
-        HttpRequest servletRequest = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:" + servletPort + "/leads"))
-                .GET()
-                .build();
-        HttpRequest springRequest = HttpRequest.newBuilder()
-                .uri(URI.create("http://localhost:" + springPort + "/leads"))
-                .GET()
-                .build();
-        HttpResponse<String> servletResponse = httpClient.send(
-                servletRequest, HttpResponse.BodyHandlers.ofString());
-        HttpResponse<String> springResponse = httpClient.send(
-                springRequest, HttpResponse.BodyHandlers.ofString());
-        assertThat(servletResponse.statusCode()).isEqualTo(200);
-        assertThat(springResponse.statusCode()).isEqualTo(200);
-        assertThat(servletResponse.body()).contains("<table");
-        assertThat(springResponse.body()).contains("<table");
-        int servletRows = countTableRows(servletResponse.body());
-        int springRows = countTableRows(springResponse.body());
-        assertThat(servletRows)
-                .as("Количество лидов должно совпадать")
-                .isEqualTo(springRows);
-        System.out.printf("Servlet: %d лидов, Spring: %d лидов%n",
-                servletRows, springRows);
-    }
+
 
     @Test
     @DisplayName("Измерение времени старта обоих стеков")

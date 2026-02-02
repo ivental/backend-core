@@ -29,7 +29,8 @@ public class LeadServiceTest {
         String email = "arasaka@arasaka.com";
         String company = "Arasaka";
         LeadStatus status = LeadStatus.NEW;
-        Lead result = service.addLead(email, company, status);
+        String phone = "+7911";
+        Lead result = service.addLead(email, phone,company,status);
         assertThat(result).isNotNull();
         assertThat(result.email()).isEqualTo(email);
         assertThat(result.company()).isEqualTo(company);
@@ -40,9 +41,9 @@ public class LeadServiceTest {
     @Test
     void shouldThrowException_whenEmailAlreadyExists() {
         String email = "arasaka@arasaka.com";
-        service.addLead(email, "arasaka corp", LeadStatus.NEW);
+        service.addLead(email, "+7","arasaka corp", LeadStatus.NEW);
         assertThatThrownBy(() ->
-                service.addLead(email, "arasaka inc", LeadStatus.NEW)
+                service.addLead(email, "+7","arasaka inc", LeadStatus.NEW)
         )
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("email уже существует");
@@ -50,15 +51,15 @@ public class LeadServiceTest {
 
     @Test
     void shouldFindAllLeads() {
-        service.addLead("arasaka@arasaka.com", "arasaka", LeadStatus.NEW);
-        service.addLead("militech@militech.com", "militech", LeadStatus.CONTACTED);
+        service.addLead("arasaka@arasaka.com", "+7","arasaka", LeadStatus.NEW);
+        service.addLead("militech@militech.com", "+7","militech", LeadStatus.CONTACTED);
         List<Lead> result = service.findAll();
         assertThat(result).hasSize(2);
     }
 
     @Test
     void shouldFindLeadById() {
-        Lead created = service.addLead("find@example.com", "Company", LeadStatus.NEW);
+        Lead created = service.addLead("find@example.com", "+7","Company", LeadStatus.NEW);
         Optional<Lead> result = service.findById(created.id());
         assertThat(result).isPresent();
         assertThat(result.get().email()).isEqualTo("find@example.com");
@@ -66,7 +67,7 @@ public class LeadServiceTest {
 
     @Test
     void shouldFindLeadByEmail() {
-        service.addLead("arasaka@arasaka.com", "arasaka", LeadStatus.NEW);
+        service.addLead("arasaka@arasaka.com", "+7","arasaka", LeadStatus.NEW);
         Optional<Lead> result = service.findByEmail("arasaka@arasaka.com");
         assertThat(result).isPresent();
         assertThat(result.get().company()).isEqualTo("arasaka");

@@ -10,11 +10,7 @@ spring:
   application:
     name: mentee-power-crm
 
-logging:
-  level:
-    root: DEBUG
-    org.springframework.web: DEBUG
-    com.yourcompany.backendcore: DEBUG
+
 
 
 
