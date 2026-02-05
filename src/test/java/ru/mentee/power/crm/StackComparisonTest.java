@@ -41,10 +41,6 @@ class StackComparisonTest {
                     resp.getWriter().write(
                             "<html><body><table>" +
                                     "<tr><td>Lead 1</td></tr>" +
-                                    "<tr><td>Lead 2</td></tr>" +
-                                    "<tr><td>Lead 3</td></tr>" +
-                                    "<tr><td>Lead 4</td></tr>" +
-                                    "<tr><td>Lead 5</td></tr>" +
                                     "</table></body></html>"
                     );
                 } catch (Exception e) {

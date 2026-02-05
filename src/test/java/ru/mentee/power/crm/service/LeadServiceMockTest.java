@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.repository.LeadRepository;
+import ru.mentee.power.crm.spring.service.LeadService;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -37,7 +38,7 @@ public class LeadServiceMockTest {
         when(mockRepository.save(any(Lead.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
         Lead result = service.addLead("new@example.com",
-                "Company", LeadStatus.NEW);
+                "+7911","Company", LeadStatus.NEW);
         verify(mockRepository, times(1)).save(any(Lead.class));
         assertThat(result.email()).isEqualTo("new@example.com");
     }
@@ -50,7 +51,7 @@ public class LeadServiceMockTest {
         when(mockRepository.findByEmail("existing@example.com"))
                 .thenReturn(Optional.of(existingLead));
         assertThatThrownBy(() ->
-                service.addLead("existing@example.com", "New Company", LeadStatus.NEW)
+                service.addLead("existing@example.com", "+7911","New Company", LeadStatus.NEW)
         ).isInstanceOf(IllegalStateException.class);
         verify(mockRepository, never()).save(any(Lead.class));
     }
@@ -61,7 +62,7 @@ public class LeadServiceMockTest {
                 .thenReturn(Optional.empty());
         when(mockRepository.save(any(Lead.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
-        service.addLead("test@example.com", "Company", LeadStatus.NEW);
+        service.addLead("test@example.com", "+7911","Company", LeadStatus.NEW);
         var inOrder = inOrder(mockRepository);
         inOrder.verify(mockRepository).findByEmail("test@example.com");
         inOrder.verify(mockRepository).save(any(Lead.class));

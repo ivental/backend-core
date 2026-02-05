@@ -1,8 +1,6 @@
 package ru.mentee.power.crm.infrastructure;
-import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 import ru.mentee.power.crm.model.Lead;
-import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.repository.LeadRepository;
 
 import java.util.*;
