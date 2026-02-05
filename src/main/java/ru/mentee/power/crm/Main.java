@@ -4,7 +4,7 @@ import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 import ru.mentee.power.crm.infrastructure.InMemoryLeadRepository;
 import ru.mentee.power.crm.model.LeadStatus;
-import ru.mentee.power.crm.service.LeadService;
+import ru.mentee.power.crm.spring.service.LeadService;
 import ru.mentee.power.crm.servlet.LeadListServlet;
 
 import java.io.File;
