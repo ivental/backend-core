@@ -27,7 +27,6 @@ ext {
     springBootVersion = '3.5.9'
 }
 
-
 dependencies {
     testImplementation platform("org.junit:junit-bom:${junitVersion}")
     testImplementation "org.junit.jupiter:junit-jupiter"
@@ -45,12 +44,6 @@ dependencies {
     implementation "gg.jte:jte-spring-boot-starter-3:${jteSpringBootVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework:spring-test'
-
-
-
-
-
-
 }
 
 jte {
