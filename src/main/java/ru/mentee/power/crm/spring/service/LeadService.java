@@ -51,15 +51,14 @@ public class LeadService {
     }
 
     public List<Lead> findByStatus(LeadStatus status) {
-        List<Lead> allLeads = repository.findAll();
-        List<Lead> result = allLeads.stream()
-                .filter(lead -> {
-                    boolean matches = lead.status().equals(status);
-                    System.out.println("  " + lead.email() + " -> status=" + lead.status() + ", matches=" + matches);
-                    return matches;
-                })
+        List<Lead> filtered = repository.findAll().stream()
+                .filter(lead -> lead.status().equals(status))
                 .collect(Collectors.toList());
-        return result;
+
+        System.out.println("Found " + filtered.size() + " leads with status " + status);
+        return filtered;
     }
 }
+
+
 

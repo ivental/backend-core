@@ -24,7 +24,7 @@
             <!-- Phone -->
             <div>
                 <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">
-                    Phone
+                    Телефон
                 </label>
                 <input
                         type="text"
@@ -39,7 +39,7 @@
             <!-- Company -->
             <div>
                 <label for="company" class="block text-sm font-medium text-gray-700 mb-1">
-                    Company
+                    Компания
                 </label>
                 <input
                         type="text"
@@ -72,6 +72,11 @@
                         <option value="QUALIFIED" selected>Квалифицирован</option>
                     @else
                         <option value="QUALIFIED">Квалифицирован</option>
+                    @endif
+                    @if(lead.status().toString().equals("DONE"))
+                        <option value="DONE" selected>Готово</option>
+                    @else
+                        <option value="DONE">Готово</option>
                     @endif
                 </select>
             </div>
