@@ -17,19 +17,23 @@
                 Связались
             </a>
             <a href="/leads?status=QUALIFIED"
-            class="px-4 py-2 rounded-lg ${currentFilter == ru.mentee.power.crm.model.LeadStatus.QUALIFIED ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}">
+               class="px-4 py-2 rounded-lg ${currentFilter == ru.mentee.power.crm.model.LeadStatus.QUALIFIED ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}">
                 Квалифицирован
             </a>
             <a href="/leads?status=DONE"
                class="px-4 py-2 rounded-lg ${currentFilter == ru.mentee.power.crm.model.LeadStatus.DONE ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}">
                 Готово
+            </a>
         </div>
+
         <a href="/leads/new"
            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors">
-
-        + Добавить лида
+            + Добавить лида
         </a>
     </div>
+        + Добавить лида
+        </a>
+
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
