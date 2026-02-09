@@ -122,4 +122,14 @@ class LeadControllerTest {
                 LeadStatus.NEW
         );
     }
+    @Test
+    void shouldDeleteLeadAndRedirect() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mockMvc.perform(post("/leads/{id}/delete", id))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/leads"));
+
+        verify(leadService).delete(id);
+    }
 }
