@@ -31,8 +31,6 @@
             + Добавить лида
         </a>
     </div>
-        + Добавить лида
-        </a>
 
     <div class="bg-white rounded-lg shadow overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200">
@@ -42,6 +40,9 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Телефон</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Компания</th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Статус</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"></th>
+
             </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -64,6 +65,15 @@
                            class="text-blue-600 hover:underline font-medium">
                             Редактировать
                         </a>
+                    </td>
+
+                    <td>
+                        <form method="post" action="/leads/${lead.id().toString()}/delete" class="inline"
+                              onclick="return confirm('Удалить лида ${lead.email()}?')">
+                            <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+                                Удалить
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @endfor
