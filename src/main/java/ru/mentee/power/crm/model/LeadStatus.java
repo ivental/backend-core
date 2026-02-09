@@ -5,7 +5,7 @@ public enum LeadStatus {
     NEW("Новый"),
     CONTACTED("Связались"),
     QUALIFIED("Квалифицирован"),
-    DONE("Готово");
+    LOST("Утерян");
 
 
     private final String russianName;
