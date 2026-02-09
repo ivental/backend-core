@@ -44,4 +44,15 @@ public class DemoController {
 
         return sb.toString().replace("\\n", "<br>");
     }
+    public LeadRepository getFieldRepository() {
+        return fieldRepository;
+    }
+
+    public LeadService getConstructorService() {
+        return constructorService;
+    }
+
+    public LeadService getSetterService() {
+        return setterService;
+    }
 }
