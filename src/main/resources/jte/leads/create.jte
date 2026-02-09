@@ -73,10 +73,10 @@
                     @else
                         <option value="QUALIFIED">Квалифицирован</option>
                     @endif
-                    @if(lead.status().toString().equals("DONE"))
-                        <option value="DONE" selected>Готово</option>
+                    @if(lead.status().toString().equals("LOST"))
+                        <option value="LOST" selected>Утерян</option>
                     @else
-                        <option value="DONE">Готово</option>
+                        <option value="LOST">Утерян </option>
                     @endif
                 </select>
             </div>

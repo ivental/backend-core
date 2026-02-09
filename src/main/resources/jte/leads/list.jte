@@ -20,9 +20,9 @@
                class="px-4 py-2 rounded-lg ${currentFilter == ru.mentee.power.crm.model.LeadStatus.QUALIFIED ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}">
                 Квалифицирован
             </a>
-            <a href="/leads?status=DONE"
-               class="px-4 py-2 rounded-lg ${currentFilter == ru.mentee.power.crm.model.LeadStatus.DONE ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}">
-                Готово
+            <a href="/leads?status=LOST"
+               class="px-4 py-2 rounded-lg ${currentFilter == ru.mentee.power.crm.model.LeadStatus.LOST ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}">
+                Утерян
             </a>
         </div>
 
@@ -58,6 +58,12 @@
                                   "bg-green-100 text-green-800"}">
                                 ${lead.status().getRussianName()}
                             </span>
+                    </td>
+                    <td class="px-4 py-2">
+                        <a href="/leads/${lead.id().toString()}/edit"
+                           class="text-blue-600 hover:underline font-medium">
+                            Редактировать
+                        </a>
                     </td>
                 </tr>
             @endfor
