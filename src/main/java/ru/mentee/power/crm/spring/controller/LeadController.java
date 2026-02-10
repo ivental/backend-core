@@ -22,9 +22,9 @@ public class LeadController {
 
     @GetMapping("/leads/{id}/edit")
     public String showEditForm(@PathVariable UUID id, Model model) {
-        Optional <Lead> optionalLead = leadService.findById(id);
-        if (optionalLead.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Lead not found");
+        Optional<Lead> optionalLead = leadService.findById(id);
+        if (optionalLead.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lead not found");
         }
         Lead lead = optionalLead.get();
         model.addAttribute("lead", lead);
@@ -56,15 +56,21 @@ public class LeadController {
 
     @GetMapping("/leads")
     public String showLeads(
-            @RequestParam(required = false) LeadStatus status,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String status,
             Model model
     ) {
 
-        List<Lead> list = (status == null)
-                ? leadService.findAll()
-                : leadService.findByStatus(status);
-        model.addAttribute("leads", list);
-        model.addAttribute("currentFilter", status);
+        LeadStatus statusEnum = null;
+        if (status != null && !status.isEmpty()) {
+            statusEnum = LeadStatus.valueOf(status);
+        }
+
+        List<Lead> leads = leadService.findLeads(search, statusEnum);
+        model.addAttribute("leads", leads);
+        model.addAttribute("search", search != null ? search : "");
+        model.addAttribute("status", status != null ? status : "");
+        model.addAttribute("currentFilter", statusEnum);
         return "leads/list";
     }
 
@@ -82,3 +88,4 @@ public class LeadController {
         return "redirect:/leads";
     }
 }
+

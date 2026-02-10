@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class LeadService {
@@ -81,6 +82,25 @@ public class LeadService {
                         "Lead with id " + id + " not found"
                 ));
         repository.delete(id);
+    }
+
+    public List<Lead> findLeads(String search, LeadStatus status) {
+        List<Lead> leads = repository.findAll();
+        Stream<Lead> stream = leads.stream();
+
+        if (search != null && !search.trim().isEmpty()) {
+            String lowerSearch = search.toLowerCase().trim();
+            stream = stream.filter(lead ->
+                    lead.email().toLowerCase().contains(lowerSearch) ||
+                            lead.company().toLowerCase().contains(lowerSearch)
+            );
+        }
+
+        if (status != null) {
+            stream = stream.filter(lead -> lead.status().equals(status));
+        }
+
+        return stream.toList();
     }
 }
 
