@@ -1,28 +1,50 @@
 @param java.util.List<ru.mentee.power.crm.model.Lead> leads
 @param ru.mentee.power.crm.model.LeadStatus currentFilter
+@param String search
 
 @template.layout.main(content = @`
+    <form method="get" action="/leads" class="mb-6 bg-white p-4 rounded shadow">
+        <div class="flex gap-4">
+            <input
+                    type="text"
+                    name="search"
+                    placeholder="Поиск по email или компании..."
+                    value="${search}"
+                    class="px-3 py-2 border rounded w-full"
+            />
+            <select name="status" class="px-3 py-2 border rounded">
+                <option value="">Все статусы</option>
+                <option value="NEW">Новый</option>
+                <option value="CONTACTED">Связались</option>
+                <option value="QUALIFIED">Квалифицирован</option>
+                <option value="LOST">Потерян</option>
+            </select>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Поиск</button>
+        </div>
+        <a href="/leads" class="text-sm text-gray-600 hover:underline">Очистить фильтры</a>
+    </form>
+
     <div class="mb-4 flex justify-between items-center">
         <div class="mb-4 flex gap-2">
             <a href="/leads"
-               class="px-4 py-2 rounded-lg ${currentFilter == null ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}">
+               class="px-4 py-2 rounded ${currentFilter == null ? "bg-blue-500 text-white" : "bg-gray-200"}">
                 Все
             </a>
             <a href="/leads?status=NEW"
-               class="px-4 py-2 rounded-lg ${currentFilter == ru.mentee.power.crm.model.LeadStatus.NEW ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}">
-                Новый
+               class="px-4 py-2 rounded ${currentFilter == ru.mentee.power.crm.model.LeadStatus.NEW ? "bg-blue-500 text-white" : "bg-gray-200"}">
+                NEW
             </a>
             <a href="/leads?status=CONTACTED"
-               class="px-4 py-2 rounded-lg ${currentFilter == ru.mentee.power.crm.model.LeadStatus.CONTACTED ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}">
-                Связались
+               class="px-4 py-2 rounded ${currentFilter == ru.mentee.power.crm.model.LeadStatus.CONTACTED ? "bg-blue-500 text-white" : "bg-gray-200"}">
+                CONTACTED
             </a>
             <a href="/leads?status=QUALIFIED"
-               class="px-4 py-2 rounded-lg ${currentFilter == ru.mentee.power.crm.model.LeadStatus.QUALIFIED ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}">
-                Квалифицирован
+               class="px-4 py-2 rounded ${currentFilter == ru.mentee.power.crm.model.LeadStatus.QUALIFIED ? "bg-blue-500 text-white" : "bg-gray-200"}">
+                QUALIFIED
             </a>
             <a href="/leads?status=LOST"
-               class="px-4 py-2 rounded-lg ${currentFilter == ru.mentee.power.crm.model.LeadStatus.LOST ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"}">
-                Утерян
+               class="px-4 py-2 rounded ${currentFilter == ru.mentee.power.crm.model.LeadStatus.LOST ? "bg-blue-500 text-white" : "bg-gray-200"}">
+                LOST
             </a>
         </div>
 
