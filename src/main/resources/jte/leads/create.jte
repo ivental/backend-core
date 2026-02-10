@@ -70,7 +70,7 @@
                 </select>
                 @if(errors != null && errors.hasFieldErrors("status"))
                     <p class="text-red-600 text-sm mt-1">
-                        ${errors.getFieldError("company").getDefaultMessage()}
+                        ${errors.getFieldError("status").getDefaultMessage()}
                     </p>
                 @endif
             </div>
