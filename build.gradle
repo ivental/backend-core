@@ -25,6 +25,8 @@ ext {
     jteVersion = '3.2.1'
     jteSpringBootVersion = '3.2.1'
     springBootVersion = '3.5.9'
+    validationApiVersion = '3.0.2'
+    hibernateValidatorVersion = '8.0.1.Final'
 }
 
 dependencies {
@@ -44,6 +46,9 @@ dependencies {
     implementation "gg.jte:jte-spring-boot-starter-3:${jteSpringBootVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework:spring-test'
+    implementation "jakarta.validation:jakarta.validation-api:${validationApiVersion}"
+    implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
+
 }
 
 jte {

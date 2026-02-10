@@ -1,5 +1,6 @@
 @import ru.mentee.power.crm.model.Lead
 @param Lead lead
+@param org.springframework.validation.BindingResult errors
 
 @template.layout.main(content = @`
     <div class="max-w-md mx-auto mt-8">
@@ -8,77 +9,70 @@
         <form action="/leads" method="post" class="space-y-4">
             <!-- Email -->
             <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
-                    Email
-                </label>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
                 <input
                         type="email"
                         id="email"
                         name="email"
-                        required
                         value="${lead.email()}"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                        placeholder="example@company.com"
+                        class="w-full px-3 py-2 border ${errors != null && errors.hasFieldErrors("email") ? "border-red-500" : "border-gray-300"} rounded-md"
                 />
+                @if(errors != null && errors.hasFieldErrors("email"))
+                    <p class="text-red-600 text-sm mt-1">
+                        ${errors.getFieldError("email").getDefaultMessage()}
+                    </p>
+                @endif
             </div>
             <!-- Phone -->
             <div>
-                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">
-                    Телефон
-                </label>
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Телефон *</label>
                 <input
-                        type="text"
+                        type="tel"
                         id="phone"
                         name="phone"
-                        required
                         value="${lead.phone()}"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                        placeholder="Номер телефона"
+                        class="w-full px-3 py-2 border ${errors != null && errors.hasFieldErrors("phone") ? "border-red-500" : "border-gray-300"} rounded-md"
                 />
+                @if(errors != null && errors.hasFieldErrors("phone"))
+                    <p class="text-red-600 text-sm mt-1">
+                        ${errors.getFieldError("phone").getDefaultMessage()}
+                    </p>
+                @endif
             </div>
             <!-- Company -->
             <div>
-                <label for="company" class="block text-sm font-medium text-gray-700 mb-1">
-                    Компания
-                </label>
+                <label for="company" class="block text-sm font-medium text-gray-700 mb-1">Компания *</label>
                 <input
                         type="text"
                         id="company"
                         name="company"
-                        required
                         value="${lead.company()}"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-                        placeholder="Название компании"
+                        class="w-full px-3 py-2 border ${errors != null && errors.hasFieldErrors("company") ? "border-red-500" : "border-gray-300"} rounded-md"
                 />
+                @if(errors != null && errors.hasFieldErrors("company"))
+                    <p class="text-red-600 text-sm mt-1">
+                        ${errors.getFieldError("company").getDefaultMessage()}
+                    </p>
+                @endif
             </div>
             <!-- Status -->
             <div>
-                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Статус</label>
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Статус *</label>
                 <select
                         id="status"
                         name="status"
-                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500">
-                    @if(lead.status().toString().equals("NEW"))
-                        <option value="NEW" selected>Новый</option>
-                    @else
-                        <option value="NEW">Новый</option>
-                    @endif
-                    @if(lead.status().toString().equals("CONTACTED"))
-                        <option value="CONTACTED" selected>Связались</option>
-                    @else
-                        <option value="CONTACTED">Связались</option>
-                    @endif
-                    @if(lead.status().toString().equals("QUALIFIED"))
-                        <option value="QUALIFIED" selected>Квалифицирован</option>
-                    @else
-                        <option value="QUALIFIED">Квалифицирован</option>
-                    @endif
-                    @if(lead.status().toString().equals("LOST"))
-                        <option value="LOST" selected>Утерян</option>
-                    @else
-                        <option value="LOST">Утерян </option>
-                    @endif
+                        class="w-full px-3 py-2 border ${errors != null && errors.hasFieldErrors("status") ? "border-red-500" : "border-gray-300"} rounded-md"
+                >
+                    <option value="NEW">Новый</option>
+                    <option value="CONTACTED">Связались</option>
+                    <option value="QUALIFIED">Квалифицирован</option>
+                    <option value="LOST">Потерян</option>
                 </select>
+                @if(errors != null && errors.hasFieldErrors("status"))
+                    <p class="text-red-600 text-sm mt-1">
+                        ${errors.getFieldError("company").getDefaultMessage()}
+                    </p>
+                @endif
             </div>
 
             <!-- Submit Button -->

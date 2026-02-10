@@ -32,19 +32,19 @@
             </a>
             <a href="/leads?status=NEW"
                class="px-4 py-2 rounded ${currentFilter == ru.mentee.power.crm.model.LeadStatus.NEW ? "bg-blue-500 text-white" : "bg-gray-200"}">
-                NEW
+                Новый
             </a>
             <a href="/leads?status=CONTACTED"
                class="px-4 py-2 rounded ${currentFilter == ru.mentee.power.crm.model.LeadStatus.CONTACTED ? "bg-blue-500 text-white" : "bg-gray-200"}">
-                CONTACTED
+                Связались
             </a>
             <a href="/leads?status=QUALIFIED"
                class="px-4 py-2 rounded ${currentFilter == ru.mentee.power.crm.model.LeadStatus.QUALIFIED ? "bg-blue-500 text-white" : "bg-gray-200"}">
-                QUALIFIED
+                Квалифицирован
             </a>
             <a href="/leads?status=LOST"
                class="px-4 py-2 rounded ${currentFilter == ru.mentee.power.crm.model.LeadStatus.LOST ? "bg-blue-500 text-white" : "bg-gray-200"}">
-                LOST
+                Потерян
             </a>
         </div>
 

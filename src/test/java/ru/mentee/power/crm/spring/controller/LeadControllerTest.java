@@ -213,4 +213,61 @@ class LeadControllerTest {
                 .andExpect(model().attribute("search", searchTerm))
                 .andExpect(model().attribute("status", status.name()));
     }
+    @Test
+    void shouldNotCreateLeadWithEmptyEmail() throws Exception {
+        mockMvc.perform(post("/leads")
+                        .param("email", "")
+                        .param("phone", "+79119633911")
+                        .param("company", "Megacorp")
+                        .param("status", "NEW"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("leads/create"))
+                .andExpect(model().attributeHasFieldErrors("lead", "email"));
+    }
+
+    @Test
+    void shouldNotCreateLeadWithInvalidEmail() throws Exception {
+        mockMvc.perform(post("/leads")
+                        .param("email", "iventalllgmailcom")
+                        .param("phone", "+79119633911")
+                        .param("company", "Megacorp")
+                        .param("status", "NEW"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("leads/create"))
+                .andExpect(model().attributeHasFieldErrors("lead", "email"));
+    }
+
+    @Test
+    void shouldNotCreateLeadWithEmptyPhone() throws Exception {
+        mockMvc.perform(post("/leads")
+                        .param("email", "iventalll@gmail.com")
+                        .param("phone", "")
+                        .param("company", "Megacorp")
+                        .param("status", "NEW"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("leads/create"))
+                .andExpect(model().attributeHasFieldErrors("lead", "phone"));
+    }
+    @Test
+    void shouldNotCreateLeadWithEmptyCompany() throws Exception {
+        mockMvc.perform(post("/leads")
+                        .param("email", "iventalll@gmail.com")
+                        .param("phone", "+79119633911")
+                        .param("company", "")
+                        .param("status", "NEW"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("leads/create"))
+                .andExpect(model().attributeHasFieldErrors("lead", "company"));
+    }
+    @Test
+    void shouldNotCreateLeadWithoutStatus() throws Exception {
+        mockMvc.perform(post("/leads")
+                                .param("email", "iventalll@gmail.com")
+                                .param("phone", "+79119633911")
+                                .param("company", "Megacorp")
+                )
+                .andExpect(status().isOk())
+                .andExpect(view().name("leads/create"))
+                .andExpect(model().attributeHasFieldErrors("lead", "status"));
+    }
 }
