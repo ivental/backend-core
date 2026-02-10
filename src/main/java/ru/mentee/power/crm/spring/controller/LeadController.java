@@ -1,9 +1,11 @@
 package ru.mentee.power.crm.spring.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.model.Lead;
@@ -32,13 +34,32 @@ public class LeadController {
     }
 
     @PostMapping("/leads/{id}")
-    public String updateLead(@PathVariable UUID id, @ModelAttribute Lead lead) {
+    public String updateLead(
+            @PathVariable UUID id,
+            @Valid @ModelAttribute Lead lead,
+            BindingResult result,
+            Model model) {
+
         if (!id.equals(lead.id())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "ID в пути (" + id + ") не совпадает с ID в объекте (" + lead.id() + ")");
         }
-        leadService.update(id, lead);
-        return "redirect:/leads";
+
+        if (result.hasErrors()) {
+            model.addAttribute("lead", lead);
+            model.addAttribute("errors", result);
+            return "leads/edit";
+        }
+
+        try {
+            leadService.update(id, lead);
+            return "redirect:/leads";
+        } catch (IllegalStateException e) {
+            result.rejectValue("email", "error.lead", e.getMessage());
+            model.addAttribute("lead", lead);
+            model.addAttribute("errors", result);
+            return "leads/edit";
+        }
     }
 
     @PostMapping("/leads/{id}/delete")
@@ -77,15 +98,25 @@ public class LeadController {
 
     @GetMapping("/leads/new")
     public String showCreateForm(Model model) {
-        model.addAttribute("lead", new Lead(null, "", "", "", LeadStatus.NEW));
+        model.addAttribute("lead", new Lead(null,  "", "", "", LeadStatus.NEW));
         return "leads/create";
     }
 
 
     @PostMapping("/leads")
-    public String createLead(@ModelAttribute Lead lead) {
-        leadService.addLead(lead.email(), lead.phone(), lead.company(), lead.status());
-        return "redirect:/leads";
+    public String createLead(@Valid @ModelAttribute Lead lead, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("errors", result);
+            return "leads/create";
+        }
+        try {
+            leadService.addLead(lead.email(), lead.phone(), lead.company(), lead.status());
+            return "redirect:/leads";
+        } catch (IllegalStateException e) {
+            result.rejectValue("email", "error.lead", e.getMessage());
+            model.addAttribute("errors", result);
+            return "leads/create";
+        }
     }
 }
 

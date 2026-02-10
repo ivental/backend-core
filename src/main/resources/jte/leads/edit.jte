@@ -1,5 +1,6 @@
 @import ru.mentee.power.crm.model.Lead
 @param Lead lead
+@param org.springframework.validation.BindingResult errors
 
 @template.layout.main(content = @`
     <div class="max-w-md mx-auto mt-8">
