@@ -11,7 +11,7 @@ class LeadControllerUnitTest {
         MockLeadService mockService = new MockLeadService();
         LeadController controller = new LeadController(mockService);
         String response = controller.home();
-        assertThat(response).contains("2 leads"); // MockLeadService возвращает 2 лида
+        assertThat(response).contains("2 leads");
     }
 
     @Test

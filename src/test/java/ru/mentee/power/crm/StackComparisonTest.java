@@ -5,6 +5,7 @@ import org.apache.catalina.startup.Tomcat;
 import org.junit.jupiter.api.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ActiveProfiles;
 import ru.mentee.power.crm.spring.Application;
 
 import java.net.http.*;
@@ -16,6 +17,7 @@ import java.util.regex.Matcher;
 
 import static org.assertj.core.api.Assertions.*;
 
+@ActiveProfiles("test")
 class StackComparisonTest {
     private static Tomcat tomcat;
     private static ConfigurableApplicationContext springContext;
@@ -53,7 +55,10 @@ class StackComparisonTest {
         tomcat.start();
         servletStartupMs = (System.nanoTime() - start) / 1_000_000;
         servletPort = tomcat.getConnector().getLocalPort();
-        String[] args = {"--server.port=0"};
+        String[] args = {
+                "--server.port=0",
+                "--spring.profiles.active=test"
+        };
         start = System.nanoTime();
         springContext = SpringApplication.run(Application.class, args);
         springStartupMs = (System.nanoTime() - start) / 1_000_000;

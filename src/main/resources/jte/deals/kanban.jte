@@ -32,7 +32,8 @@
                                 @endif
                             @endfor
                         </select>
-                        <button type="submit" class="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
+                        <button type="submit"
+                                class="text-xs bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">
                             Перевести
                         </button>
                     </form>

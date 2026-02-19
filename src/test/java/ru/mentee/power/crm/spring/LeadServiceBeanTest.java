@@ -1,5 +1,6 @@
 package ru.mentee.power.crm.spring;
 
+import org.springframework.test.context.ActiveProfiles;
 import ru.mentee.power.crm.repository.LeadRepository;
 import ru.mentee.power.crm.spring.service.LeadService;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.context.ApplicationContext;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 class LeadServiceBeanTest {
     @Autowired
     private ApplicationContext context;

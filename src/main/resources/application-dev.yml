@@ -5,13 +5,25 @@ spring:
     password: java
 
   jpa:
+    show-sql: true
     database: POSTGRESQL
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
 
   sql:
     init:
       mode: always
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.transaction: DEBUG
+    ru.mentee.power.crm: DEBUG
+
+server:
+  port: 8081
