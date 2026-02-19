@@ -3,8 +3,8 @@ package ru.mentee.power.crm.spring.service;
 import org.springframework.stereotype.Service;
 import ru.mentee.power.crm.domain.Deal;
 import ru.mentee.power.crm.domain.DealStatus;
-import ru.mentee.power.crm.repository.LeadRepository;
 import ru.mentee.power.crm.spring.repository.DealRepository;
+import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 @Service
 public class DealService {
     private final DealRepository dealRepository;
-    private final LeadRepository leadRepository;
+    private final LeadRepositoryJpa leadRepositoryjpa;
 
-    public DealService(DealRepository dealRepository, LeadRepository leadRepository) {
+    public DealService(DealRepository dealRepository, LeadRepositoryJpa leadRepositoryjpa) {
         this.dealRepository = dealRepository;
-        this.leadRepository = leadRepository;
+        this.leadRepositoryjpa = leadRepositoryjpa;
     }
 
     public Deal convertLeadToDeal(UUID leadId, BigDecimal amount) {
-        if (leadRepository.findById(leadId).isEmpty()) {
+        if (leadRepositoryjpa.findById(leadId).isEmpty()) {
             throw new IllegalArgumentException("Lead not found: " + leadId);
         }
         Deal deal = new Deal(leadId, amount);
