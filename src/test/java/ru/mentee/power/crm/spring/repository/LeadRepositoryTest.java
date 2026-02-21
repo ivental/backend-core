@@ -47,14 +47,14 @@ class LeadRepositoryTest {
                 null
         );
         repository.save(lead);
-        Optional<Lead> found = repository.findByEmailNative("iv@gmail.com");
+        Optional<Lead> found = repository.findByEmail("iv@gmail.com");
         assertThat(found).isPresent();
         assertThat(found.get().getCompany()).isEqualTo("MEGACORP");
     }
 
     @Test
     void shouldReturnEmptyOptional_whenEmailNotFound() {
-        Optional<Lead> found = repository.findByEmailNative("nonexistent@test.com");
+        Optional<Lead> found = repository.findByEmail("nonexistent@test.com");
         assertThat(found).isEmpty();
     }
 
