@@ -1,6 +1,10 @@
 package ru.mentee.power.crm.spring.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -23,7 +27,7 @@ public class LeadServiceJpa {
 
 
     public Lead addLead(Lead lead) {
-        if (repository.findByEmailNative(lead.getEmail()).isPresent()) {
+        if (repository.findByEmail(lead.getEmail()).isPresent()) {
             throw new IllegalStateException("Lead with email already exists: " + lead.getEmail());
         }
         return repository.save(lead);
@@ -41,12 +45,12 @@ public class LeadServiceJpa {
 
 
     public Optional<Lead> findByEmail(String email) {
-        return repository.findByEmailNative(email);
+        return repository.findByEmail(email);
     }
 
 
     public List<Lead> findByStatus(LeadStatusJpa status) {
-        return repository.findByStatusNative(status.name());
+        return repository.findByStatus(status);
     }
 
 
@@ -62,13 +66,42 @@ public class LeadServiceJpa {
         repository.save(existing);
     }
 
+    public List<Lead> findByStatuses(LeadStatusJpa... statuses) {
+        return repository.findByStatusIn(List.of(statuses));
+    }
+
+    public Page<Lead> getFirstPage(int pageSize) {
+        PageRequest pageRequest = PageRequest.of(
+                0,
+                pageSize,
+                Sort.by("createdAt").descending()
+        );
+        return repository.findAll(pageRequest);
+    }
+
+    public Page<Lead> searchByCompany(String company, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return repository.findByCompany(company, pageable);
+    }
+
+    @Transactional
+    public int convertNewToContacted() {
+        int updated = repository.updateStatusBulk(LeadStatusJpa.NEW, LeadStatusJpa.CONTACTED);
+        System.out.printf("Converted %d leads from NEW to CONTACTED%n", updated);
+        return updated;
+    }
+
+    @Transactional
+    public int archiveOldLeads(LeadStatusJpa status) {
+        return repository.deleteByStatusBulk(status);
+    }
+
     public void delete(UUID id) {
         if (!repository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         repository.deleteById(id);
     }
-
 
     public List<Lead> findLeads(String search, LeadStatusJpa status) {
         List<Lead> allLeads = repository.findAll();
