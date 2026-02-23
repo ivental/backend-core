@@ -3,6 +3,8 @@ package ru.mentee.power.crm.spring.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
@@ -14,7 +16,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-
 @RequiredArgsConstructor
 public class LeadServiceJpa {
 
@@ -88,5 +89,23 @@ public class LeadServiceJpa {
         }
 
         return allLeads;
+    }
+
+    @Transactional
+    public void processLeads(List<UUID> leadIds) {
+        for (UUID id : leadIds) {
+            this.processSingleLead(id);
+        }
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void processSingleLead(UUID leadId) {
+        Lead lead = repository.findById(leadId)
+                .orElseThrow(() -> new IllegalArgumentException("Lead not found: " + leadId));
+        if (lead.getEmail().contains("fail")) {
+            throw new RuntimeException("Simulated failure for lead: " + leadId);
+        }
+        lead.setStatus(LeadStatusJpa.CONTACTED);
+        repository.save(lead);
     }
 }

@@ -7,13 +7,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
+import ru.mentee.power.crm.spring.repository.DealRepositoryJpa;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
+import ru.mentee.power.crm.spring.service.DealServiceJpa;
 import ru.mentee.power.crm.spring.service.LeadService;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.eq;
@@ -28,7 +32,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
-@WebMvcTest(LeadController.class)
+@WebMvcTest(
+        controllers = LeadController.class,
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {DealControllerJpa.class, DealServiceJpa.class,
+                        DealRepositoryJpa.class}
+        )
+)
 @ActiveProfiles("test")
 class LeadControllerTest {
 
@@ -37,6 +48,9 @@ class LeadControllerTest {
 
     @MockitoBean
     private LeadService leadService;
+
+    @MockitoBean
+    private DealRepositoryJpa dealRepositoryJpa;
 
     @MockitoBean
     private LeadRepositoryJpa leadRepositoryJpa;
