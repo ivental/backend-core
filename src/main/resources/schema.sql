@@ -108,7 +108,7 @@ CREATE TABLE IF NOT EXISTS deals
 (
     3
 ) DEFAULT 'USD',
-    stage VARCHAR
+    status VARCHAR
 (
     50
 ) NOT NULL,
@@ -130,4 +130,4 @@ CREATE TABLE IF NOT EXISTS deals
 
 -- Индексы для deals
 CREATE INDEX IF NOT EXISTS idx_deals_lead_id ON deals(lead_id);
-CREATE INDEX IF NOT EXISTS idx_deals_stage ON deals(stage);
+CREATE INDEX IF NOT EXISTS idx_deals_status ON deals(status);
