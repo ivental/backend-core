@@ -53,7 +53,6 @@ public class PropagationIntegrationTest {
 
     private Lead createLead(String email) {
         Lead lead = Lead.builder()
-                .company("Megacorp")
                 .email("iventalll@gmail.com")
                 .phone("+7911")
                 .status(LeadStatusJpa.NEW)

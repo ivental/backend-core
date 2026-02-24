@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import ru.mentee.power.crm.spring.model.Company;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
 
@@ -36,7 +37,7 @@ public interface LeadRepositoryJpa extends JpaRepository<Lead, UUID> {
      * Поиск лидов по названию компании.
      * SQL: SELECT * FROM leads WHERE company = ?
      */
-    List<Lead> findByCompany(String company);
+    List<Lead> findByCompany(Company company);
 
     /**
      * Подсчет количества лидов с определенным статусом.
@@ -60,7 +61,7 @@ public interface LeadRepositoryJpa extends JpaRepository<Lead, UUID> {
      * Поиск лидов по статусу И компании.
      * SQL: SELECT * FROM leads WHERE status = ? AND company = ?
      */
-    List<Lead> findByStatusAndCompany(LeadStatusJpa status, String company);
+    List<Lead> findByStatusAndCompany(LeadStatusJpa status, Company company);
 
     /**
      * Поиск лидов по статусу с сортировкой по дате создания (от новых к старым).
@@ -79,11 +80,10 @@ public interface LeadRepositoryJpa extends JpaRepository<Lead, UUID> {
      */
 
     @Query("SELECT l FROM Lead l WHERE l.company = :company ORDER BY l.createdAt DESC")
-    List<Lead> findByCompanyOrderedByDate(@Param("company") String company);
+    List<Lead> findByCompanyOrderedByDate(@Param("company") Company company);
 
-//    Закомментирован до появления связи @ManyToOne с Company
-//    @Query("SELECT l FROM Lead l JOIN l.company c WHERE c.name = :companyName")
-//    List<Lead> findByCompanyName(@Param("companyName") String name);
+    @Query("SELECT l FROM Lead l JOIN l.company c WHERE c.name = :companyName")
+    List<Lead> findByCompanyName(@Param("companyName") String name);
 
 
     /**

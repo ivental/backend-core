@@ -29,7 +29,7 @@ class IsolationIntegrationTest {
     void setUp() {
         leadRepository.deleteAll();
         testLead = Lead.builder()
-                .company("Megacorp")
+
                 .email("iventalll@gmail.com")
                 .phone("+7911")
                 .status(LeadStatusJpa.NEW)

@@ -32,7 +32,7 @@ class LeadLockingServiceTest {
         Lead lead = Lead.builder()
                 .email("iventalll@gmail.com")
                 .phone("+7911")
-                .company("Megacorp")
+
                 .status(LeadStatusJpa.NEW)
                 .build();
         lead = leadRepository.save(lead);
@@ -79,7 +79,7 @@ class LeadLockingServiceTest {
         Lead lead = Lead.builder()
                 .phone("+7911")
                 .email("iv@gmail.com")
-                .company("Megacorp")
+
                 .status(LeadStatusJpa.NEW)
                 .build();
         lead = leadRepository.save(lead);
@@ -123,13 +123,11 @@ class LeadLockingServiceTest {
         Lead leadFirst = Lead.builder()
                 .email("ivental@gmail.com")
                 .phone("+7911")
-                .company("Megacorp")
                 .status(LeadStatusJpa.NEW)
                 .build();
         Lead leadSecond = Lead.builder()
                 .email("ive@gmail.com")
                 .phone("+7912")
-                .company("Supercorp")
                 .status(LeadStatusJpa.NEW)
                 .build();
 

@@ -17,7 +17,7 @@
 
         <div>
             <label class="block text-sm font-medium mb-1">Клиент</label>
-            <p class="p-2 bg-white rounded">${lead.getCompany()}</p>
+            <p class="p-2 bg-white rounded">${lead.getCompany().getName()}</p>
         </div>
 
         <div>
