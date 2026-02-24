@@ -52,11 +52,12 @@ public class PropagationIntegrationTest {
     }
 
     private Lead createLead(String email) {
-        Lead lead = new Lead();
-        lead.setEmail(email);
-        lead.setPhone("123");
-        lead.setCompany("Test");
-        lead.setStatus(LeadStatusJpa.NEW);
+        Lead lead = Lead.builder()
+                .company("Megacorp")
+                .email("iventalll@gmail.com")
+                .phone("+7911")
+                .status(LeadStatusJpa.NEW)
+                .build();
         return leadRepository.save(lead);
     }
 

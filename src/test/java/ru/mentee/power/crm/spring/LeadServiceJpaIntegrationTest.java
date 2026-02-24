@@ -35,7 +35,7 @@ class LeadServiceJpaIntegrationTest {
     void convertLeadToDeal_shouldRollbackOnConstraintViolation() {
         Lead lead = Lead.builder()
                 .company("Megacorp")
-                .email("iventalll@gmail.com")
+                .email("iventallll@gmail.com")
                 .phone("+7911")
                 .status(LeadStatusJpa.NEW)
                 .build();

@@ -21,35 +21,32 @@ class LeadRepositoryTest {
 
     @Test
     void shouldSaveAndFindLeadById_whenValidData() {
-        Lead lead = new Lead(
-                null,
-                "iv@gmail.com",
-                "+7911",
-                "Megacorp",
-                LeadStatusJpa.NEW,
-                null
-        );
+        Lead lead = Lead.builder()
+                .company("Megacorp")
+                .email("iventalio@gmail.com")
+                .phone("+7911")
+                .status(LeadStatusJpa.NEW)
+                .build();
+
 
         Lead saved = repository.save(lead);
         Optional<Lead> found = repository.findById(saved.getId());
         assertThat(found).isPresent();
-        assertThat(found.get().getEmail()).isEqualTo("iv@gmail.com");
+        assertThat(found.get().getEmail()).isEqualTo("iventalio@gmail.com");
     }
 
     @Test
     void shouldFindByEmailNative_whenLeadExists() {
-        Lead lead = new Lead(
-                null,
-                "iv@gmail.com",
-                "+7911",
-                "MEGACORP",
-                LeadStatusJpa.NEW,
-                null
-        );
+        Lead lead = Lead.builder()
+                .company("Megacorp")
+                .email("ivi@gmail.com")
+                .phone("+7911")
+                .status(LeadStatusJpa.NEW)
+                .build();
         repository.save(lead);
-        Optional<Lead> found = repository.findByEmail("iv@gmail.com");
+        Optional<Lead> found = repository.findByEmail("ivi@gmail.com");
         assertThat(found).isPresent();
-        assertThat(found.get().getCompany()).isEqualTo("MEGACORP");
+        assertThat(found.get().getCompany()).isEqualTo("Megacorp");
     }
 
     @Test
@@ -60,18 +57,33 @@ class LeadRepositoryTest {
 
     @Test
     void shouldFindAllLeads() {
-        repository.save(new Lead(null, "iv@gmail.com", "+7911",
-                "MEGACORP", LeadStatusJpa.NEW, null));
-        repository.save(new Lead(null, "iv1@gmail.com", "+7911",
-                "MEGACORP", LeadStatusJpa.NEW, null));
+        Lead lead = Lead.builder()
+                .company("Megacorp")
+                .email("iventalll@gmail.com")
+                .phone("+7911")
+                .status(LeadStatusJpa.NEW)
+                .build();
+        Lead leadFirst = Lead.builder()
+                .company("MegaCorp")
+                .email("iventalll1@gmail.com")
+                .phone("+7911")
+                .status(LeadStatusJpa.NEW)
+                .build();
+        repository.save(lead);
+        repository.save(leadFirst);
         var all = repository.findAll();
         assertThat(all).hasSize(2);
     }
 
     @Test
     void shouldDeleteLead() {
-        Lead lead = repository.save(new Lead(null, "iv@gmail.com", "+7911",
-                "MEGACORP", LeadStatusJpa.NEW, null));
+        Lead lead = Lead.builder()
+                .company("Megacorp")
+                .email("iventalll@gmail.com")
+                .phone("+7911")
+                .status(LeadStatusJpa.NEW)
+                .build();
+        repository.save(lead);
         repository.deleteById(lead.getId());
         assertThat(repository.findById(lead.getId())).isEmpty();
     }
