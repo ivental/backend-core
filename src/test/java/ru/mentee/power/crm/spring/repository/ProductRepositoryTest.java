@@ -44,43 +44,32 @@ public class ProductRepositoryTest {
         product.setPrice(new BigDecimal("99990.00"));
         product.setActive(true);
         productRepository.save(product);
-
-        // When
         Optional<Product> found = productRepository.findBySku("ASUS-X-707-II");
-
-        // Then
         assertThat(found).isPresent();
         assertThat(found.get().getName()).isEqualTo("Ноутбук ASUS X707II");
     }
 
     @Test
     void shouldFindByActiveTrue_whenProductsExist() {
-        // Given
         Product laptop = new Product();
         laptop.setName("Монитор Tuoshuo 32 NanoIps");
         laptop.setSku("TUOSHUO-32-NANOIPS");
         laptop.setPrice(new BigDecimal("38990"));
         laptop.setActive(true);
         productRepository.save(laptop);
-
         Product service = new Product();
         service.setName("Быстросервис (год)");
         service.setSku("QUICK-SERVICE-YEAR");
         service.setPrice(new BigDecimal("14400.00"));
         service.setActive(true);
         productRepository.save(service);
-
         Product discontinued = new Product();
         discontinued.setName("Клавиатура Cidoo V75 Pro");
         discontinued.setSku("CIDOO-V75-PRO");
         discontinued.setPrice(new BigDecimal("7000.00"));
         discontinued.setActive(false);
         productRepository.save(discontinued);
-
-        // When
         List<Product> activeProducts = productRepository.findByActiveTrue();
-
-        // Then
         assertThat(activeProducts).hasSize(2);
         assertThat(activeProducts)
                 .extracting(Product::getSku)
