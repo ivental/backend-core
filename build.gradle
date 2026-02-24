@@ -29,6 +29,7 @@ ext {
     hibernateValidatorVersion = '8.0.1.Final'
     h2Version = '2.3.232'
     postgresqlVersion = '42.7.8'
+    liquibaseVersion = '4.25.0'
 }
 
 dependencies {
@@ -57,6 +58,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'com.h2database:h2'
     implementation 'org.springframework.retry:spring-retry'
+    implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
+
 
 
 }
