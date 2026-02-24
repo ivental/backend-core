@@ -26,7 +26,7 @@ public class LeadLockingService {
     @Transactional
     public Lead convertLeadToDealWithLock(UUID leadId, LeadStatusJpa newStatus) {
         Lead lead = leadRepositoryJpa.findByIdForUpdate(leadId)
-                .orElseThrow(() -> new IllegalArgumentException("Lead not found: " + leadId));
+                .orElseThrow(() -> new IllegalArgumentException("Error: " + leadId));
 
         lead.setStatus(newStatus);
         return leadRepositoryJpa.save(lead);
@@ -35,7 +35,7 @@ public class LeadLockingService {
     @Transactional
     public void updateLeadStatusOptimistic(UUID leadId, LeadStatusJpa newStatus) {
         Lead lead = leadRepositoryJpa.findById(leadId)
-                .orElseThrow(() -> new IllegalArgumentException("Lead not found: " + leadId));
+                .orElseThrow(() -> new IllegalArgumentException("Error: " + leadId));
 
         lead.setStatus(newStatus);
         leadRepositoryJpa.save(lead);
@@ -49,7 +49,7 @@ public class LeadLockingService {
     @Transactional
     public Lead updateWithRetry(UUID leadId, LeadStatusJpa newStatus) {
         Lead lead = leadRepositoryJpa.findById(leadId)
-                .orElseThrow(() -> new IllegalArgumentException("Lead not found: " + leadId));
+                .orElseThrow(() -> new IllegalArgumentException("Error: " + leadId));
         lead.setStatus(newStatus);
         return leadRepositoryJpa.save(lead);
     }
@@ -58,7 +58,7 @@ public class LeadLockingService {
     @Transactional
     public void processTwoLeadsInOrder(UUID leadIdFirst, UUID leadIdSecond) {
         leadRepositoryJpa.findByIdForUpdate(leadIdFirst)
-                .orElseThrow(() -> new IllegalArgumentException("Lead not found: " + leadIdFirst));
+                .orElseThrow(() -> new IllegalArgumentException("Error: " + leadIdFirst));
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -66,6 +66,6 @@ public class LeadLockingService {
             throw new RuntimeException("Interrupted during processing", e);
         }
         leadRepositoryJpa.findByIdForUpdate(leadIdSecond)
-                .orElseThrow(() -> new IllegalArgumentException("Lead not found: " + leadIdSecond));
+                .orElseThrow(() -> new IllegalArgumentException("Error: " + leadIdSecond));
     }
 }
