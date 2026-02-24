@@ -1,17 +1,22 @@
 package ru.mentee.power.crm.spring;
 
-import org.junit.jupiter.api.Test;import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-import ru.mentee.power.crm.spring.model.Lead;import ru.mentee.power.crm.spring.model.LeadStatusJpa;
+import ru.mentee.power.crm.spring.model.Company;
+import ru.mentee.power.crm.spring.model.Lead;
+import ru.mentee.power.crm.spring.model.LeadStatusJpa;
 import ru.mentee.power.crm.spring.repository.DealRepositoryJpa;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
 import ru.mentee.power.crm.spring.service.DealServiceJpa;
 import ru.mentee.power.crm.spring.service.LeadServiceJpa;
-import java.math.BigDecimal;import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @SpringBootTest
@@ -34,11 +39,11 @@ class LeadServiceJpaIntegrationTest {
     @Test
     void convertLeadToDeal_shouldRollbackOnConstraintViolation() {
         Lead lead = Lead.builder()
-                .company("Megacorp")
                 .email("iventallll@gmail.com")
                 .phone("+7911")
                 .status(LeadStatusJpa.NEW)
                 .build();
+
 
         lead = leadRepository.save(lead);
         UUID leadId = lead.getId();

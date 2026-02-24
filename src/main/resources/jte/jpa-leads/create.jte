@@ -45,7 +45,7 @@
                         type="text"
                         id="company"
                         name="company"
-                        value="${lead.getCompany()}"
+                        value="${lead.getCompany() != null ? lead.getCompany().getName() : ""}"
                         class="w-full px-3 py-2 border ${errors != null && errors.hasFieldErrors("company") ? "border-red-500" : "border-gray-300"} rounded-md"
                 />
                 @if(errors != null && errors.hasFieldErrors("company"))

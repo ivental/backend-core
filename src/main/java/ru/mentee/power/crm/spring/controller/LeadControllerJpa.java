@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import ru.mentee.power.crm.spring.model.Company;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.service.LeadServiceJpa;
@@ -48,7 +49,7 @@ public class LeadControllerJpa {
                 .id(null)
                 .email("")
                 .phone("")
-                .company("")
+                .company(new Company())
                 .status(LeadStatusJpa.NEW)
                 .build();
         model.addAttribute("lead", lead);

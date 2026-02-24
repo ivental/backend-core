@@ -72,7 +72,7 @@
                 <tr class="hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">${lead.getEmail()}</td>
                     <td class="px-6 py-4 whitespace-nowrap">${lead.getPhone() != null ? lead.getPhone() : "-"}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${lead.getCompany()}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${lead.getCompany() != null ? lead.getCompany().getName() : ""}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
                                 ${lead.getStatus() == ru.mentee.power.crm.spring.model.LeadStatusJpa.NEW ? "bg-blue-100 text-blue-800" :

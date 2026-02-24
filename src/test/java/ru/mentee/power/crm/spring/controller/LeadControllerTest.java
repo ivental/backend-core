@@ -15,6 +15,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
+import ru.mentee.power.crm.spring.repository.CompanyRepository;
 import ru.mentee.power.crm.spring.repository.DealRepositoryJpa;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
 import ru.mentee.power.crm.spring.service.DealServiceJpa;
@@ -54,6 +55,9 @@ class LeadControllerTest {
 
     @MockitoBean
     private LeadRepositoryJpa leadRepositoryJpa;
+
+    @MockitoBean
+    private CompanyRepository companyRepository;
 
     private Lead existingLead;
     private UUID validId;

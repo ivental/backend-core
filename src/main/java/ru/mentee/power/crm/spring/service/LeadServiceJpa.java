@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import ru.mentee.power.crm.spring.model.Company;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
@@ -18,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +60,7 @@ public class LeadServiceJpa {
         Lead existing = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Lead not found: " + id));
 
+        existing.setCompany(updatedLead.getCompany());
         existing.setEmail(updatedLead.getEmail());
         existing.setPhone(updatedLead.getPhone());
         existing.setCompany(updatedLead.getCompany());
@@ -117,7 +120,7 @@ public class LeadServiceJpa {
             allLeads = allLeads.stream()
                     .filter(lead ->
                             lead.getEmail().toLowerCase().contains(searchLower) ||
-                                    lead.getCompany().toLowerCase().contains(searchLower))
+                                    lead.getCompany().getName().toLowerCase().contains(searchLower))
                     .collect(Collectors.toList());
         }
 

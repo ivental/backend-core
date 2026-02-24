@@ -30,7 +30,6 @@ public class LeadServiceJpaTest {
             Lead lead = Lead.builder()
                     .email("lead" + i + "@example.com")
                     .phone(i + "123")
-                    .company("Company " + i)
                     .status(LeadStatusJpa.NEW)
                     .build();
             repository.save(lead);
@@ -40,7 +39,6 @@ public class LeadServiceJpaTest {
             Lead lead = Lead.builder()
                     .email("lost" + i + "@example.com")
                     .phone(i + "456")
-                    .company("LostCompany " + i)
                     .status(LeadStatusJpa.CONTACTED)
                     .build();
             repository.save(lead);
