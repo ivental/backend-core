@@ -10,8 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "deals")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -33,6 +32,11 @@ public class Deal {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DealStatusJpa status;
+
+    @Version
+    @Column(name = "version", nullable = false)
+    @Setter(AccessLevel.NONE)
+    private Long version;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;

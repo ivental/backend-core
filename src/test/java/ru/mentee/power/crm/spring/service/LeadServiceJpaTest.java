@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
@@ -12,7 +13,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 @Transactional
-
+@ActiveProfiles("test")
 public class LeadServiceJpaTest {
 
     @Autowired
@@ -26,20 +27,22 @@ public class LeadServiceJpaTest {
         repository.deleteAll();
 
         for (int i = 1; i <= 3; i++) {
-            Lead lead = new Lead();
-            lead.setEmail("lead" + i + "@example.com");
-            lead.setPhone(i + "123");
-            lead.setCompany("Company " + i);
-            lead.setStatus(LeadStatusJpa.NEW);
+            Lead lead = Lead.builder()
+                    .email("lead" + i + "@example.com")
+                    .phone(i + "123")
+                    .company("Company " + i)
+                    .status(LeadStatusJpa.NEW)
+                    .build();
             repository.save(lead);
         }
 
         for (int i = 1; i <= 3; i++) {
-            Lead lead = new Lead();
-            lead.setEmail("lost" + i + "@example.com");
-            lead.setPhone(i + "456");
-            lead.setCompany("LostCompany " + i);
-            lead.setStatus(LeadStatusJpa.CONTACTED);
+            Lead lead = Lead.builder()
+                    .email("lost" + i + "@example.com")
+                    .phone(i + "456")
+                    .company("LostCompany " + i)
+                    .status(LeadStatusJpa.CONTACTED)
+                    .build();
             repository.save(lead);
         }
     }
