@@ -33,7 +33,8 @@ public class Product {
     @Column(nullable = false)
     private Boolean active = true;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
     @Builder.Default
     private List<DealProduct> dealProducts = new ArrayList<>();
 }

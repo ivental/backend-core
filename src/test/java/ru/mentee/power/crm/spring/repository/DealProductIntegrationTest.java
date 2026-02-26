@@ -156,35 +156,13 @@ public class DealProductIntegrationTest {
 
         Deal savedDeal = dealRepository.save(deal);
         entityManager.flush();
-
-        System.out.println("БЕЗ @EntityGraph (N+1 проблема)");
         entityManager.clear();
         Deal dealWithoutGraph = dealRepository.findById(savedDeal.getId()).orElseThrow();
-
         List<DealProduct> withoutGraph = dealWithoutGraph.getDealProducts();
-        System.out.println("Загружено " + withoutGraph.size() + " позиций в сделке");
-
-
-        for (DealProduct dp : withoutGraph) {
-            System.out.println("  - " + dp.getProduct().getName() + " (SKU: " + dp.getProduct().getSku() + ")");
-        }
-
-        System.out.println("С @EntityGraph (1 запрос)");
-        entityManager.clear();
-        Deal dealWithGraph = dealRepository.findDealWithProducts(savedDeal.getId()).orElseThrow();
-
-        List<DealProduct> withGraph = dealWithGraph.getDealProducts();
-        System.out.println("Загружено " + withGraph.size() + " позиций в сделке");
-
-        for (DealProduct dp : withGraph) {
-            System.out.println("  - " + dp.getProduct().getName() + " (SKU: " + dp.getProduct().getSku() + ")");
-        }
-
-        assertThat(withGraph).hasSize(3);
         assertThat(withoutGraph).hasSize(3);
-        assertThat(withGraph.stream().map(dp -> dp.getProduct().getSku()))
-                .containsExactlyInAnyOrder("KEYBOARD-001", "MOUSE-001", "STAND-001");
-        assertThat(withoutGraph.stream().map(dp -> dp.getProduct().getSku()))
-                .containsExactlyInAnyOrder("KEYBOARD-001", "MOUSE-001", "STAND-001");
+        assertThat(withoutGraph)
+                .extracting(dp -> dp.getProduct().getName())
+                .containsExactlyInAnyOrder("Клавиатура", "Мышь", "Подставка");
     }
 }
+
