@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -46,5 +48,19 @@ public class Deal {
         if (this.createdAt == null) {
             this.createdAt = OffsetDateTime.now(java.time.ZoneOffset.UTC);
         }
+    }
+
+    @OneToMany(mappedBy = "deal", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<DealProduct> dealProducts = new ArrayList<>();
+
+    public void addDealProduct(DealProduct dealProduct) {
+        dealProducts.add(dealProduct);
+        dealProduct.setDeal(this);
+    }
+
+    public void removeDealProduct(DealProduct dealProduct) {
+        dealProducts.remove(dealProduct);
+        dealProduct.setDeal(null);
     }
 }

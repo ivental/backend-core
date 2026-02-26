@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -30,4 +32,9 @@ public class Product {
 
     @Column(nullable = false)
     private Boolean active = true;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+
+    @Builder.Default
+    private List<DealProduct> dealProducts = new ArrayList<>();
 }
