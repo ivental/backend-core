@@ -1,20 +1,18 @@
 package ru.mentee.power.crm.model;
 
-
 public enum LeadStatus {
-    NEW("Новый"),
-    CONTACTED("Связались"),
-    QUALIFIED("Квалифицирован"),
-    LOST("Утерян");
+  NEW("Новый"),
+  CONTACTED("Связались"),
+  QUALIFIED("Квалифицирован"),
+  LOST("Утерян");
 
+  private final String russianName;
 
-    private final String russianName;
+  LeadStatus(String russianName) {
+    this.russianName = russianName;
+  }
 
-    LeadStatus(String russianName) {
-        this.russianName = russianName;
-    }
-
-    public String getRussianName() {
-        return russianName;
-    }
+  public String getRussianName() {
+    return russianName;
+  }
 }

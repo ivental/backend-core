@@ -1,14 +1,12 @@
 package ru.mentee.power.crm.spring.model;
 
-
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.*;
 
 @Entity
 @Table(name = "deals")
@@ -18,49 +16,49 @@ import java.util.UUID;
 @Builder
 public class Deal {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
 
-    @Column(name = "lead_id", nullable = false)
-    private UUID leadId;
+  @Column(name = "lead_id", nullable = false)
+  private UUID leadId;
 
-    @Column(nullable = false)
-    private String title;
+  @Column(nullable = false)
+  private String title;
 
-    @Column(nullable = false, precision = 15, scale = 2)
-    private BigDecimal amount;
+  @Column(nullable = false, precision = 15, scale = 2)
+  private BigDecimal amount;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private DealStatusJpa status;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  private DealStatusJpa status;
 
-    @Version
-    @Column(name = "version", nullable = false)
-    @Setter(AccessLevel.NONE)
-    private Long version;
+  @Version
+  @Column(name = "version", nullable = false)
+  @Setter(AccessLevel.NONE)
+  private Long version;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private OffsetDateTime createdAt;
+  @Column(name = "created_at", nullable = false, updatable = false)
+  private OffsetDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        if (this.createdAt == null) {
-            this.createdAt = OffsetDateTime.now(java.time.ZoneOffset.UTC);
-        }
+  @PrePersist
+  protected void onCreate() {
+    if (this.createdAt == null) {
+      this.createdAt = OffsetDateTime.now(java.time.ZoneOffset.UTC);
     }
+  }
 
-    @OneToMany(mappedBy = "deal", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<DealProduct> dealProducts = new ArrayList<>();
+  @OneToMany(mappedBy = "deal", cascade = CascadeType.ALL, orphanRemoval = true)
+  @Builder.Default
+  private List<DealProduct> dealProducts = new ArrayList<>();
 
-    public void addDealProduct(DealProduct dealProduct) {
-        dealProducts.add(dealProduct);
-        dealProduct.setDeal(this);
-    }
+  public void addDealProduct(DealProduct dealProduct) {
+    dealProducts.add(dealProduct);
+    dealProduct.setDeal(this);
+  }
 
-    public void removeDealProduct(DealProduct dealProduct) {
-        dealProducts.remove(dealProduct);
-        dealProduct.setDeal(null);
-    }
+  public void removeDealProduct(DealProduct dealProduct) {
+    dealProducts.remove(dealProduct);
+    dealProduct.setDeal(null);
+  }
 }

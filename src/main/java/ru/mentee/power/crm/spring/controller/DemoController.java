@@ -6,52 +6,51 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import ru.mentee.power.crm.repository.LeadRepository;
 import ru.mentee.power.crm.spring.service.LeadService;
 
-
 public class DemoController {
-    private final LeadService constructorService;
-    @Autowired
-    private LeadRepository fieldRepository;
-    private LeadService setterService;
+  private final LeadService constructorService;
+  @Autowired private LeadRepository fieldRepository;
+  private LeadService setterService;
 
-    public DemoController(LeadService constructorService) {
-        this.constructorService = constructorService;
-    }
+  public DemoController(LeadService constructorService) {
+    this.constructorService = constructorService;
+  }
 
-    @Autowired(required = false)
-    public void setSetterService(LeadService setterService) {
-        this.setterService = setterService;
-    }
+  @Autowired(required = false)
+  public void setSetterService(LeadService setterService) {
+    this.setterService = setterService;
+  }
 
-    @GetMapping("/demo")
-    @ResponseBody
-    public String demo() {
-        StringBuilder sb = new StringBuilder("DI Types Demo:\\n\\n");
+  @GetMapping("/demo")
+  @ResponseBody
+  public String demo() {
+    StringBuilder sb = new StringBuilder("DI Types Demo:\\n\\n");
 
-        sb.append("Constructor Injection (final): ")
-                .append(constructorService != null ? "✓ Injected" : "✗ NULL")
-                .append("\\n");
+    sb.append("Constructor Injection (final): ")
+        .append(constructorService != null ? "✓ Injected" : "✗ NULL")
+        .append("\\n");
 
-        sb.append("Field Injection (@Autowired field): ")
-                .append(fieldRepository != null ? "✓ Injected" : "✗ NULL")
-                .append("\\n");
+    sb.append("Field Injection (@Autowired field): ")
+        .append(fieldRepository != null ? "✓ Injected" : "✗ NULL")
+        .append("\\n");
 
-        sb.append("Setter Injection (@Autowired setter): ")
-                .append(setterService != null ? "✓ Injected" : "✗ NULL")
-                .append("\\n\\n");
+    sb.append("Setter Injection (@Autowired setter): ")
+        .append(setterService != null ? "✓ Injected" : "✗ NULL")
+        .append("\\n\\n");
 
-        sb.append("Recommendation: Use Constructor Injection with final fields.");
+    sb.append("Recommendation: Use Constructor Injection with final fields.");
 
-        return sb.toString().replace("\\n", "<br>");
-    }
-    public LeadRepository getFieldRepository() {
-        return fieldRepository;
-    }
+    return sb.toString().replace("\\n", "<br>");
+  }
 
-    public LeadService getConstructorService() {
-        return constructorService;
-    }
+  public LeadRepository getFieldRepository() {
+    return fieldRepository;
+  }
 
-    public LeadService getSetterService() {
-        return setterService;
-    }
+  public LeadService getConstructorService() {
+    return constructorService;
+  }
+
+  public LeadService getSetterService() {
+    return setterService;
+  }
 }

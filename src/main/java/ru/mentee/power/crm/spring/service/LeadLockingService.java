@@ -1,6 +1,6 @@
 package ru.mentee.power.crm.spring.service;
 
-
+import java.util.UUID;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -10,62 +10,63 @@ import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
 
-
-
-import java.util.UUID;
-
-
 @Service
 public class LeadLockingService {
-    private final LeadRepositoryJpa leadRepositoryJpa;
+  private final LeadRepositoryJpa leadRepositoryJpa;
 
-    public LeadLockingService(LeadRepositoryJpa leadRepositoryJpa) {
-        this.leadRepositoryJpa = leadRepositoryJpa;
+  public LeadLockingService(LeadRepositoryJpa leadRepositoryJpa) {
+    this.leadRepositoryJpa = leadRepositoryJpa;
+  }
+
+  @Transactional
+  public Lead convertLeadToDealWithLock(UUID leadId, LeadStatusJpa newStatus) {
+    Lead lead =
+        leadRepositoryJpa
+            .findByIdForUpdate(leadId)
+            .orElseThrow(() -> new IllegalArgumentException("Error: " + leadId));
+
+    lead.setStatus(newStatus);
+    return leadRepositoryJpa.save(lead);
+  }
+
+  @Transactional
+  public void updateLeadStatusOptimistic(UUID leadId, LeadStatusJpa newStatus) {
+    Lead lead =
+        leadRepositoryJpa
+            .findById(leadId)
+            .orElseThrow(() -> new IllegalArgumentException("Error: " + leadId));
+
+    lead.setStatus(newStatus);
+    leadRepositoryJpa.save(lead);
+  }
+
+  @Retryable(
+      retryFor = ObjectOptimisticLockingFailureException.class,
+      maxAttempts = 3,
+      backoff = @Backoff(delay = 100))
+  @Transactional
+  public Lead updateWithRetry(UUID leadId, LeadStatusJpa newStatus) {
+    Lead lead =
+        leadRepositoryJpa
+            .findById(leadId)
+            .orElseThrow(() -> new IllegalArgumentException("Error: " + leadId));
+    lead.setStatus(newStatus);
+    return leadRepositoryJpa.save(lead);
+  }
+
+  @Transactional
+  public void processTwoLeadsInOrder(UUID leadIdFirst, UUID leadIdSecond) {
+    leadRepositoryJpa
+        .findByIdForUpdate(leadIdFirst)
+        .orElseThrow(() -> new IllegalArgumentException("Error: " + leadIdFirst));
+    try {
+      Thread.sleep(100);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new RuntimeException("Interrupted during processing", e);
     }
-
-    @Transactional
-    public Lead convertLeadToDealWithLock(UUID leadId, LeadStatusJpa newStatus) {
-        Lead lead = leadRepositoryJpa.findByIdForUpdate(leadId)
-                .orElseThrow(() -> new IllegalArgumentException("Error: " + leadId));
-
-        lead.setStatus(newStatus);
-        return leadRepositoryJpa.save(lead);
-    }
-
-    @Transactional
-    public void updateLeadStatusOptimistic(UUID leadId, LeadStatusJpa newStatus) {
-        Lead lead = leadRepositoryJpa.findById(leadId)
-                .orElseThrow(() -> new IllegalArgumentException("Error: " + leadId));
-
-        lead.setStatus(newStatus);
-        leadRepositoryJpa.save(lead);
-    }
-
-    @Retryable(
-            retryFor = ObjectOptimisticLockingFailureException.class,
-            maxAttempts = 3,
-            backoff = @Backoff(delay = 100)
-    )
-    @Transactional
-    public Lead updateWithRetry(UUID leadId, LeadStatusJpa newStatus) {
-        Lead lead = leadRepositoryJpa.findById(leadId)
-                .orElseThrow(() -> new IllegalArgumentException("Error: " + leadId));
-        lead.setStatus(newStatus);
-        return leadRepositoryJpa.save(lead);
-    }
-
-
-    @Transactional
-    public void processTwoLeadsInOrder(UUID leadIdFirst, UUID leadIdSecond) {
-        leadRepositoryJpa.findByIdForUpdate(leadIdFirst)
-                .orElseThrow(() -> new IllegalArgumentException("Error: " + leadIdFirst));
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("Interrupted during processing", e);
-        }
-        leadRepositoryJpa.findByIdForUpdate(leadIdSecond)
-                .orElseThrow(() -> new IllegalArgumentException("Error: " + leadIdSecond));
-    }
+    leadRepositoryJpa
+        .findByIdForUpdate(leadIdSecond)
+        .orElseThrow(() -> new IllegalArgumentException("Error: " + leadIdSecond));
+  }
 }
