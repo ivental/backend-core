@@ -37,6 +37,10 @@ jobs:
           SPRING_DATASOURCE_PASSWORD: ''
           SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.H2Dialect
 
+
+      - name: Check code formatting (Spotless)
+        run: ./gradlew --no-daemon spotlessCheck
+
       - name: JacocoTestReport
         run: ./gradlew --no-daemon jacocoTestReport
 

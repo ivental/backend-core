@@ -14,23 +14,15 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @ActiveProfiles("test")
 public class LeadControllerIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+  @Autowired private MockMvc mockMvc;
 
-    @Test
-    public void testGetLeadsReturns200Ok() throws Exception {
+  @Test
+  public void testGetLeadsReturns200Ok() throws Exception {
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/leads"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(
-                        org.hamcrest.Matchers.containsString("Email")));
-    }
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/leads"))
+        .andExpect(MockMvcResultMatchers.status().isOk())
+        .andExpect(
+            MockMvcResultMatchers.content().string(org.hamcrest.Matchers.containsString("Email")));
+  }
 }
-
-
-
-
-
-
-
-

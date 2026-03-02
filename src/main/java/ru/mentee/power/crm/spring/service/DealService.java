@@ -1,50 +1,50 @@
 package ru.mentee.power.crm.spring.service;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import ru.mentee.power.crm.domain.Deal;
 import ru.mentee.power.crm.domain.DealStatus;
 import ru.mentee.power.crm.spring.repository.DealRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 @Service
 public class DealService {
-    private final DealRepository dealRepository;
-    private final LeadRepositoryJpa leadRepositoryjpa;
+  private final DealRepository dealRepository;
+  private final LeadRepositoryJpa leadRepositoryjpa;
 
-    public DealService(DealRepository dealRepository, LeadRepositoryJpa leadRepositoryjpa) {
-        this.dealRepository = dealRepository;
-        this.leadRepositoryjpa = leadRepositoryjpa;
-    }
+  public DealService(DealRepository dealRepository, LeadRepositoryJpa leadRepositoryjpa) {
+    this.dealRepository = dealRepository;
+    this.leadRepositoryjpa = leadRepositoryjpa;
+  }
 
-    public Deal convertLeadToDeal(UUID leadId, BigDecimal amount) {
-        if (leadRepositoryjpa.findById(leadId).isEmpty()) {
-            throw new IllegalArgumentException("Lead not found: " + leadId);
-        }
-        Deal deal = new Deal(leadId, amount);
-        dealRepository.save(deal);
-        return deal;
+  public Deal convertLeadToDeal(UUID leadId, BigDecimal amount) {
+    if (leadRepositoryjpa.findById(leadId).isEmpty()) {
+      throw new IllegalArgumentException("Lead not found: " + leadId);
     }
+    Deal deal = new Deal(leadId, amount);
+    dealRepository.save(deal);
+    return deal;
+  }
 
-    public Deal transitionDealStatus(UUID dealId, DealStatus newStatus) {
-        Deal deal = dealRepository.findById(dealId)
-                .orElseThrow(() -> new IllegalArgumentException("Deal not found: " + dealId));
-        deal.transitionTo(newStatus);
-        dealRepository.save(deal);
-        return deal;
-    }
+  public Deal transitionDealStatus(UUID dealId, DealStatus newStatus) {
+    Deal deal =
+        dealRepository
+            .findById(dealId)
+            .orElseThrow(() -> new IllegalArgumentException("Deal not found: " + dealId));
+    deal.transitionTo(newStatus);
+    dealRepository.save(deal);
+    return deal;
+  }
 
-    public List<Deal> getAllDeals() {
-        return dealRepository.findAll();
-    }
+  public List<Deal> getAllDeals() {
+    return dealRepository.findAll();
+  }
 
-    public Map<DealStatus, List<Deal>> getDealsByStatusForKanban() {
-        return dealRepository.findAll().stream()
-                .collect(Collectors.groupingBy(Deal::getStatus));
-    }
+  public Map<DealStatus, List<Deal>> getDealsByStatusForKanban() {
+    return dealRepository.findAll().stream().collect(Collectors.groupingBy(Deal::getStatus));
+  }
 }
