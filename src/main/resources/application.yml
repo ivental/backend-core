@@ -9,6 +9,13 @@ gg:
 spring:
   application:
     name: m-crm
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
 
   datasource:
     url: jdbc:postgresql://localhost:5432/crm
@@ -29,3 +36,7 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
     drop-first: false
+
+email:
+  validation:
+    base-url: http://localhost:8087

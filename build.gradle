@@ -62,6 +62,8 @@ dependencies {
     implementation 'org.springframework.retry:spring-retry'
     implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
     implementation "com.diffplug.spotless:spotless-plugin-gradle:${spotlessVersion}"
+    testImplementation 'org.wiremock:wiremock-standalone:3.4.2'
+
 
 
 
