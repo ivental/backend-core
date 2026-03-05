@@ -1,5 +1,6 @@
 package ru.mentee.power.crm.spring.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -12,6 +13,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Lead {
 
   @Id
@@ -26,6 +28,7 @@ public class Lead {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "company_id")
+  @JsonIgnoreProperties({"leads", "hibernateLazyInitializer", "handler"})
   private Company company;
 
   @Column(nullable = false)
@@ -38,7 +41,7 @@ public class Lead {
   @Version
   @Column(name = "version", nullable = false)
   @Setter(AccessLevel.NONE)
-  private Long version;
+  private Long version = 0L;
 
   @PrePersist
   protected void onCreate() {

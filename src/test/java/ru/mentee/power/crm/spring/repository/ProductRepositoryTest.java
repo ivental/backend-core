@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
 import ru.mentee.power.crm.spring.model.Product;
 
 @DataJpaTest
@@ -18,6 +20,9 @@ import ru.mentee.power.crm.spring.model.Product;
 public class ProductRepositoryTest {
 
   @Autowired private ProductRepository productRepository;
+
+  @MockitoBean
+  private EmailValidationFeignClient emailValidationFeignClient;
 
   @Test
   void shouldSaveAndFindProduct_whenValidData() {

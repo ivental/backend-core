@@ -1,98 +1,71 @@
-package ru.mentee.power.crm.spring.rest;
+  package ru.mentee.power.crm.spring.rest;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.assertj.core.api.Assertions.assertThat;
+  import static com.github.tomakehurst.wiremock.client.WireMock.*;
+  import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+  import static org.assertj.core.api.Assertions.assertThat;
+  import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
-import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
-import com.github.tomakehurst.wiremock.junit5.WireMockTest;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.RegisterExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import ru.mentee.power.crm.spring.client.EmailValidationClient;
-import ru.mentee.power.crm.spring.client.EmailValidationResponse;
+  import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+  import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
+  import com.github.tomakehurst.wiremock.junit5.WireMockTest;
+  import org.junit.jupiter.api.Test;
+  import org.junit.jupiter.api.extension.RegisterExtension;
+  import org.springframework.beans.factory.annotation.Autowired;
+  import org.springframework.boot.test.context.SpringBootTest;
+  import org.springframework.test.context.ActiveProfiles;
+  import org.springframework.test.context.DynamicPropertyRegistry;
+  import org.springframework.test.context.DynamicPropertySource;
+  import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
+  import ru.mentee.power.crm.spring.client.EmailValidationResponse;
 
-@SpringBootTest
-@WireMockTest
-@ActiveProfiles("test")
-public class EmailValidationClientWireMockTest {
+  @SpringBootTest
+  @WireMockTest
+  @ActiveProfiles("test")
 
-  @RegisterExtension
-  static WireMockExtension wireMockExtension =
-      WireMockExtension.newInstance().options(wireMockConfig().dynamicPort()).build();
+  public class EmailValidationClientWireMockTest {
 
-  @Autowired private EmailValidationClient emailValidationClient;
+    @RegisterExtension
+    static WireMockExtension wireMockExtension =
+        WireMockExtension.newInstance().options(wireMockConfig().port(8087)).build();
 
-  @DynamicPropertySource
-  static void configureProperties(DynamicPropertyRegistry registry) {
-    registry.add("email.validation.base-url", wireMockExtension::baseUrl);
+    @Autowired
+    private EmailValidationFeignClient feignClient;
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+      registry.add("email.validation.base-url", wireMockExtension::baseUrl);
+    }
+
+    @Test
+    void shouldReturnInvalidResponse_whenEmailIsInvalid(WireMockRuntimeInfo wmRuntimeInfo) {
+      wireMockExtension.stubFor(get(urlPathEqualTo("/api/validate/email"))
+              .withQueryParam("email", equalTo("invalid@bad.email"))
+              .willReturn(okJson("""
+                  {
+                      "email": "invalid@bad.email",
+                      "valid": false,
+                      "reason": "Domain does not accept email"
+                  }
+                  """)));
+      EmailValidationResponse response = feignClient.validateEmail("invalid@bad.email");
+      assertThat(response.valid()).isFalse();
+    }
+
+    @Test
+    void shouldThrowFeignException_whenExternalServiceReturns500() {
+      wireMockExtension.stubFor(get(urlPathEqualTo("/api/validate/email"))
+              .willReturn(serverError()
+                      .withBody("Internal Server Error")));
+      assertThatThrownBy(() -> feignClient.validateEmail("any@email.com"))
+              .isInstanceOf(feign.FeignException.class);
+    }
+
+    @Test
+    void shouldThrowFeignException_whenExternalServiceReturns400() {
+      wireMockExtension.stubFor(get(urlPathEqualTo("/api/validate/email"))
+              .willReturn(badRequest()
+                      .withBody("{\"error\": \"Invalid email format\"}")));
+      assertThatThrownBy(() -> feignClient.validateEmail("not-an-email"))
+              .isInstanceOf(feign.FeignException.BadRequest.class);
+    }
   }
-
-  @Test
-  void shouldReturnValid_whenEmailIsCorrect(WireMockRuntimeInfo wmRuntimeInfo) {
-    stubFor(
-        get(urlPathEqualTo("/api/validate/email"))
-            .withQueryParam("email", equalTo("john@example.com"))
-            .willReturn(
-                okJson(
-                    """
-                {
-                    "email": "john@example.com",
-                    "valid": true,
-                    "reason": "Email exists"
-                }
-                """)));
-    EmailValidationResponse response = emailValidationClient.validateEmail("john@example.com");
-    assertThat(response).isNotNull();
-    assertThat(response.valid()).isTrue();
-    assertThat(response.email()).isEqualTo("john@example.com");
-  }
-
-  @Test
-  void shouldReturnInvalid_whenEmailIsIncorrect(WireMockRuntimeInfo wmRuntimeInfo) {
-    wireMockExtension.stubFor(
-        get(urlPathEqualTo("/api/validate/email"))
-            .withQueryParam("email", equalTo("invalid-email"))
-            .willReturn(
-                okJson(
-                    """
-                {
-                    "email": "invalid-email",
-                    "valid": false,
-                    "reason": "Invalid email format"
-                }
-                """)));
-    EmailValidationResponse response = emailValidationClient.validateEmail("invalid-email");
-    assertThat(response).isNotNull();
-    assertThat(response.valid()).isFalse();
-  }
-
-  @Test
-  void shouldHandleServerError_whenExternalServiceFails(WireMockRuntimeInfo wmRuntimeInfo) {
-    stubFor(
-        get(urlPathEqualTo("/api/validate/email"))
-            .withQueryParam("email", equalTo("test@test.com"))
-            .willReturn(serverError().withBody("Internal Server Error")));
-    EmailValidationResponse response = emailValidationClient.validateEmail("iv@gmail.com");
-    assertThat(response).isNotNull();
-    assertThat(response.valid()).isTrue();
-    assertThat(response.reason()).contains("Сервис временно недоступен");
-  }
-
-  @Test
-  void shouldHandleTimeout_whenExternalServiceIsSlow(WireMockRuntimeInfo wmRuntimeInfo) {
-    stubFor(
-        get(urlPathEqualTo("/api/validate/email"))
-            .willReturn(okJson("{\"valid\": true}").withFixedDelay(15000)));
-    EmailValidationResponse response = emailValidationClient.validateEmail("ivental@gmail.com");
-    assertThat(response).isNotNull();
-    assertThat(response.valid()).isTrue();
-    assertThat(response.reason()).contains("Сервис временно недоступен");
-  }
-}

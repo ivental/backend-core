@@ -4,7 +4,7 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'gg.jte.gradle' version '3.2.1'
-    id 'org.springframework.boot' version '3.5.9'
+    id 'org.springframework.boot' version '3.5.8'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'com.diffplug.spotless' version '8.2.1'
 }
@@ -25,7 +25,7 @@ ext {
     tomcatVersion = '11.0.1'
     jteVersion = '3.2.1'
     jteSpringBootVersion = '3.2.1'
-    springBootVersion = '3.5.9'
+    springBootVersion = '3.5.8'
     validationApiVersion = '3.0.2'
     hibernateValidatorVersion = '8.0.1.Final'
     h2Version = '2.3.232'
@@ -63,10 +63,9 @@ dependencies {
     implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
     implementation "com.diffplug.spotless:spotless-plugin-gradle:${spotlessVersion}"
     testImplementation 'org.wiremock:wiremock-standalone:3.4.2'
-
-
-
-
+    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
+    implementation 'io.github.resilience4j:resilience4j-feign:2.2.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
 }
 
 jte {
