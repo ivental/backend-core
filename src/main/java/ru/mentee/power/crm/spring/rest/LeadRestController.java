@@ -25,9 +25,10 @@ public class LeadRestController {
 
   @GetMapping("/{id}")
   public ResponseEntity<Lead> getLeadById(@PathVariable UUID id) {
-    return leadService.getLeadById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    return leadService
+        .getLeadById(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 
   @PostMapping
@@ -39,9 +40,10 @@ public class LeadRestController {
 
   @PutMapping("/{id}")
   public ResponseEntity<Lead> updateLead(@PathVariable UUID id, @RequestBody Lead lead) {
-    return leadService.updateLead(id, lead)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+    return leadService
+        .updateLead(id, lead)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
   }
 
   @DeleteMapping("/{id}")

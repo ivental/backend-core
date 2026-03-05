@@ -25,8 +25,7 @@ public class LeadRepositoryJpaTest {
 
   @Autowired private CompanyRepository companyRepository;
 
-  @MockitoBean
-  private EmailValidationFeignClient emailValidationFeignClient;
+  @MockitoBean private EmailValidationFeignClient emailValidationFeignClient;
 
   private Lead lead1;
   private Lead lead2;

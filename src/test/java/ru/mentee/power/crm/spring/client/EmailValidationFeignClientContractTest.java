@@ -1,5 +1,8 @@
 package ru.mentee.power.crm.spring.client;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.github.tomakehurst.wiremock.junit5.WireMockRuntimeInfo;
 import com.github.tomakehurst.wiremock.junit5.WireMockTest;
@@ -11,28 +14,26 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 @SpringBootTest
 @WireMockTest(httpPort = 8087)
 @ActiveProfiles("test")
 @TestPropertySource(properties = "spring.cloud.compatibility-verifier.enabled=false")
 public class EmailValidationFeignClientContractTest {
-    @Autowired
-    private EmailValidationFeignClient feignClient;
+  @Autowired private EmailValidationFeignClient feignClient;
 
-    @DynamicPropertySource
-    static void configureProperties(DynamicPropertyRegistry registry) {
-        registry.add("email.validation.base-url", () -> "http://localhost:8087");
-    }
+  @DynamicPropertySource
+  static void configureProperties(DynamicPropertyRegistry registry) {
+    registry.add("email.validation.base-url", () -> "http://localhost:8087");
+  }
 
-    @Test
-    void shouldReturnValidResponse_whenEmailIsValid(WireMockRuntimeInfo wmRuntimeInfo) {
-        stubFor(get(urlPathEqualTo("/api/validate/email"))
-                .withQueryParam("email", equalTo("john@example.com"))
-                .willReturn(okJson("""
+  @Test
+  void shouldReturnValidResponse_whenEmailIsValid(WireMockRuntimeInfo wmRuntimeInfo) {
+    stubFor(
+        get(urlPathEqualTo("/api/validate/email"))
+            .withQueryParam("email", equalTo("john@example.com"))
+            .willReturn(
+                okJson(
+                    """
                 {
                     "email": "john@example.com",
                     "valid": true,
@@ -40,19 +41,23 @@ public class EmailValidationFeignClientContractTest {
                 }
                 """)));
 
-        EmailValidationResponse response = feignClient.validateEmail("john@example.com");
-        assertThat(response.valid()).isTrue();
-        assertThat(response.email()).isEqualTo("john@example.com");
-        verify(getRequestedFor(urlPathEqualTo("/api/validate/email"))
-                .withQueryParam("email", equalTo("john@example.com")));
-    }
+    EmailValidationResponse response = feignClient.validateEmail("john@example.com");
+    assertThat(response.valid()).isTrue();
+    assertThat(response.email()).isEqualTo("john@example.com");
+    verify(
+        getRequestedFor(urlPathEqualTo("/api/validate/email"))
+            .withQueryParam("email", equalTo("john@example.com")));
+  }
 
-    @Test
-    void shouldReturnInvalidResponse_whenEmailIsInvalid(WireMockRuntimeInfo wmRuntimeInfo) {
-        // Given: Contract - external API returns valid=false
-        stubFor(get(urlPathEqualTo("/api/validate/email"))
-                .withQueryParam("email", equalTo("invalid@bad.email"))
-                .willReturn(okJson("""
+  @Test
+  void shouldReturnInvalidResponse_whenEmailIsInvalid(WireMockRuntimeInfo wmRuntimeInfo) {
+    // Given: Contract - external API returns valid=false
+    stubFor(
+        get(urlPathEqualTo("/api/validate/email"))
+            .withQueryParam("email", equalTo("invalid@bad.email"))
+            .willReturn(
+                okJson(
+                    """
                 {
                     "email": "invalid@bad.email",
                     "valid": false,
@@ -60,34 +65,34 @@ public class EmailValidationFeignClientContractTest {
                 }
                 """)));
 
-        // When
-        EmailValidationResponse response = feignClient.validateEmail("invalid@bad.email");
+    // When
+    EmailValidationResponse response = feignClient.validateEmail("invalid@bad.email");
 
-        // Then
-        assertThat(response.valid()).isFalse();
-    }
+    // Then
+    assertThat(response.valid()).isFalse();
+  }
 
-    @Test
-    void shouldThrowFeignException_whenExternalServiceReturns500() {
-        // Given: External API returns 500 Internal Server Error
-        stubFor(get(urlPathEqualTo("/api/validate/email"))
-                .willReturn(serverError()
-                        .withBody("Internal Server Error")));
+  @Test
+  void shouldThrowFeignException_whenExternalServiceReturns500() {
+    // Given: External API returns 500 Internal Server Error
+    stubFor(
+        get(urlPathEqualTo("/api/validate/email"))
+            .willReturn(serverError().withBody("Internal Server Error")));
 
-        // When/Then: Feign throws exception
-        assertThatThrownBy(() -> feignClient.validateEmail("any@email.com"))
-                .isInstanceOf(feign.FeignException.class);
-    }
+    // When/Then: Feign throws exception
+    assertThatThrownBy(() -> feignClient.validateEmail("any@email.com"))
+        .isInstanceOf(feign.FeignException.class);
+  }
 
-    @Test
-    void shouldThrowFeignException_whenExternalServiceReturns400() {
-        // Given: External API returns 400 Bad Request
-        stubFor(get(urlPathEqualTo("/api/validate/email"))
-                .willReturn(badRequest()
-                        .withBody("{\"error\": \"Invalid email format\"}")));
+  @Test
+  void shouldThrowFeignException_whenExternalServiceReturns400() {
+    // Given: External API returns 400 Bad Request
+    stubFor(
+        get(urlPathEqualTo("/api/validate/email"))
+            .willReturn(badRequest().withBody("{\"error\": \"Invalid email format\"}")));
 
-        // When/Then: Feign throws exception for 4xx errors
-        assertThatThrownBy(() -> feignClient.validateEmail("not-an-email"))
-                .isInstanceOf(feign.FeignException.BadRequest.class);
-    }
+    // When/Then: Feign throws exception for 4xx errors
+    assertThatThrownBy(() -> feignClient.validateEmail("not-an-email"))
+        .isInstanceOf(feign.FeignException.BadRequest.class);
+  }
 }

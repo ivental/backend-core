@@ -1,13 +1,11 @@
 package ru.mentee.power.crm.spring.service;
 
-import java.time.Instant;
+import io.github.resilience4j.retry.annotation.Retry;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
-import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +32,6 @@ public class LeadServiceJpa {
   private static final Logger log = LoggerFactory.getLogger(LeadServiceJpa.class);
   private final EmailValidationFeignClient emailValidationClient;
 
-
   public Lead addLead(Lead lead) {
     if (repository.findByEmail(lead.getEmail()).isPresent()) {
       throw new IllegalStateException("Lead with email already exists: " + lead.getEmail());
@@ -52,11 +49,9 @@ public class LeadServiceJpa {
 
   @Retry(name = "email-validation", fallbackMethod = "createLeadFallback")
   public Lead createLead(Lead lead) {
-    EmailValidationResponse validation =
-            emailValidationClient.validateEmail(lead.getEmail());
+    EmailValidationResponse validation = emailValidationClient.validateEmail(lead.getEmail());
     if (!validation.valid()) {
-      throw new IllegalArgumentException(
-              "Invalid email: " + validation.reason());
+      throw new IllegalArgumentException("Invalid email: " + validation.reason());
     }
     lead.setCreatedAt(OffsetDateTime.now());
     return repository.save(lead);
@@ -64,15 +59,19 @@ public class LeadServiceJpa {
 
   public Lead createLeadFallback(Lead lead, Exception ex) {
 
-    log.warn("Email validation service unavailable after retries. " +
-            "Creating lead without validation. Error: {}", ex.getMessage());
+    log.warn(
+        "Email validation service unavailable after retries. "
+            + "Creating lead without validation. Error: {}",
+        ex.getMessage());
     lead.setCreatedAt(OffsetDateTime.now());
     return repository.save(lead);
   }
 
   public Optional<Lead> updateLead(UUID id, Lead updatedLead) {
-    return repository.findById(id)
-            .map(existingLead -> {
+    return repository
+        .findById(id)
+        .map(
+            existingLead -> {
               existingLead.setEmail(updatedLead.getEmail());
               existingLead.setPhone(updatedLead.getPhone());
               existingLead.setCompany(updatedLead.getCompany());

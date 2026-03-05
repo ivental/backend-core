@@ -35,10 +35,10 @@ import ru.mentee.power.crm.spring.service.LeadService;
 
 @WebMvcTest(
     controllers = LeadController.class,
-        excludeFilters = @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                classes = {DealControllerJpa.class, DealServiceJpa.class, DealRepositoryJpa.class}
-        ))
+    excludeFilters =
+        @ComponentScan.Filter(
+            type = FilterType.ASSIGNABLE_TYPE,
+            classes = {DealControllerJpa.class, DealServiceJpa.class, DealRepositoryJpa.class}))
 @ActiveProfiles("test")
 class LeadControllerTest {
 
@@ -48,8 +48,7 @@ class LeadControllerTest {
 
   @MockitoBean private DealRepositoryJpa dealRepositoryJpa;
 
-  @MockitoBean
-  private EmailValidationFeignClient emailValidationFeignClient;
+  @MockitoBean private EmailValidationFeignClient emailValidationFeignClient;
 
   @MockitoBean private LeadRepositoryJpa leadRepositoryJpa;
 

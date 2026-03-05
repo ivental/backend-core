@@ -26,8 +26,7 @@ public class DealProductIntegrationTest {
 
   @Autowired private EntityManager entityManager;
 
-  @MockitoBean
-  private EmailValidationFeignClient emailValidationFeignClient;
+  @MockitoBean private EmailValidationFeignClient emailValidationFeignClient;
 
   @Test
   void testSaveDealWithProducts() {

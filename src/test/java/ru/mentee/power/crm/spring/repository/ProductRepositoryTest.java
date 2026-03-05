@@ -21,8 +21,7 @@ public class ProductRepositoryTest {
 
   @Autowired private ProductRepository productRepository;
 
-  @MockitoBean
-  private EmailValidationFeignClient emailValidationFeignClient;
+  @MockitoBean private EmailValidationFeignClient emailValidationFeignClient;
 
   @Test
   void shouldSaveAndFindProduct_whenValidData() {

@@ -23,8 +23,7 @@ class LeadRepositoryTest {
 
   @Autowired private CompanyRepository companyRepository;
 
-  @MockitoBean
-  private EmailValidationFeignClient emailValidationFeignClient;
+  @MockitoBean private EmailValidationFeignClient emailValidationFeignClient;
 
   @Test
   void shouldSaveAndFindLeadById_whenValidData() {

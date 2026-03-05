@@ -1,4 +1,3 @@
 package ru.mentee.power.crm.service;
 
-public class LeadServiceRetryTest {
-}
+public class LeadServiceRetryTest {}
