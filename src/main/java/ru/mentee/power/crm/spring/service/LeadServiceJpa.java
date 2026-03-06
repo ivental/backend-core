@@ -32,6 +32,10 @@ public class LeadServiceJpa {
   private static final Logger log = LoggerFactory.getLogger(LeadServiceJpa.class);
   private final EmailValidationFeignClient emailValidationClient;
 
+  public Lead save(Lead lead) {
+    return repository.save(lead);
+  }
+
   public Lead addLead(Lead lead) {
     if (repository.findByEmail(lead.getEmail()).isPresent()) {
       throw new IllegalStateException("Lead with email already exists: " + lead.getEmail());

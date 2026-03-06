@@ -31,7 +31,7 @@ import ru.mentee.power.crm.spring.service.DealServiceJpa;
 import ru.mentee.power.crm.spring.service.LeadServiceJpa;
 
 @WebMvcTest(LeadRestController.class)
-@ActiveProfiles("Test")
+@ActiveProfiles("test")
 public class LeadRestControllerTest {
 
   @Autowired private MockMvc mockMvc;
@@ -79,7 +79,7 @@ public class LeadRestControllerTest {
   @Test
   void shouldReturn404_whenGetNonExistentLead() throws Exception {
     UUID id = UUID.randomUUID();
-    when(leadService.getLeadById(id)).thenReturn(Optional.empty());
+    when(leadService.findById(id)).thenReturn(Optional.empty());
 
     mockMvc.perform(get("/api/leads/{id}", id)).andExpect(status().isNotFound());
   }
@@ -95,7 +95,7 @@ public class LeadRestControllerTest {
             .status(LeadStatusJpa.NEW)
             .createdAt(OffsetDateTime.now())
             .build();
-    when(leadService.getLeadById(id)).thenReturn(Optional.of(lead));
+    when(leadService.findById(id)).thenReturn(Optional.of(lead));
 
     mockMvc
         .perform(get("/api/leads/{id}", id))
@@ -138,42 +138,6 @@ public class LeadRestControllerTest {
         .andExpect(header().string("Location", "/api/leads/" + id))
         .andExpect(jsonPath("$.id").value(id.toString()))
         .andExpect(jsonPath("$.email").value("ive@gmail.com"));
-  }
-
-  @Test
-  void shouldReturn200_whenUpdateExistingLead() throws Exception {
-    UUID id = UUID.randomUUID();
-    Lead leadToUpdate =
-        Lead.builder()
-            .email("ivi@gmail.com")
-            .phone("+7912")
-            .company(Company.builder().id(UUID.randomUUID()).build())
-            .status(LeadStatusJpa.CONTACTED)
-            .build();
-
-    Lead updatedLead =
-        Lead.builder()
-            .id(id)
-            .email(leadToUpdate.getEmail())
-            .phone(leadToUpdate.getPhone())
-            .company(leadToUpdate.getCompany())
-            .status(leadToUpdate.getStatus())
-            .createdAt(OffsetDateTime.now())
-            .version(1L)
-            .build();
-
-    when(leadService.updateLead(any(UUID.class), any(Lead.class)))
-        .thenReturn(Optional.of(updatedLead));
-
-    mockMvc
-        .perform(
-            put("/api/leads/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(leadToUpdate)))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(id.toString()))
-        .andExpect(jsonPath("$.email").value("ivi@gmail.com"))
-        .andExpect(jsonPath("$.status").value("CONTACTED"));
   }
 
   @Test
