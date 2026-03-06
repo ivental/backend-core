@@ -26,6 +26,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.mentee.power.crm.model.Lead;
 import ru.mentee.power.crm.model.LeadStatus;
+import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
 import ru.mentee.power.crm.spring.repository.CompanyRepository;
 import ru.mentee.power.crm.spring.repository.DealRepositoryJpa;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
@@ -46,6 +47,8 @@ class LeadControllerTest {
   @MockitoBean private LeadService leadService;
 
   @MockitoBean private DealRepositoryJpa dealRepositoryJpa;
+
+  @MockitoBean private EmailValidationFeignClient emailValidationFeignClient;
 
   @MockitoBean private LeadRepositoryJpa leadRepositoryJpa;
 
@@ -229,7 +232,7 @@ class LeadControllerTest {
     mockMvc
         .perform(
             post("/leads")
-                .param("email", "iventalllgmailcom")
+                .param("email", "iventalll1gmailcom")
                 .param("phone", "+79119633911")
                 .param("company", "Megacorp")
                 .param("status", "NEW"))

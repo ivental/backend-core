@@ -1,13 +1,12 @@
 package ru.mentee.power.crm.spring.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "companies")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Company {
 
   @Id
@@ -28,6 +28,9 @@ public class Company {
 
   @OneToMany(mappedBy = "company", cascade = CascadeType.PERSIST)
   @Builder.Default
+  @JsonIgnore
+  @ToString.Exclude
+  @EqualsAndHashCode.Exclude
   private List<Lead> leads = new ArrayList<>();
 
   public void addLead(Lead lead) {

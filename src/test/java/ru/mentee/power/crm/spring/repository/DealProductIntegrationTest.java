@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
 import ru.mentee.power.crm.spring.model.*;
 
 @DataJpaTest
@@ -23,6 +25,8 @@ public class DealProductIntegrationTest {
   @Autowired private ProductRepository productRepository;
 
   @Autowired private EntityManager entityManager;
+
+  @MockitoBean private EmailValidationFeignClient emailValidationFeignClient;
 
   @Test
   void testSaveDealWithProducts() {

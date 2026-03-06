@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
 import ru.mentee.power.crm.spring.model.Company;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
@@ -20,6 +22,8 @@ class LeadRepositoryTest {
   @Autowired private LeadRepositoryJpa repository;
 
   @Autowired private CompanyRepository companyRepository;
+
+  @MockitoBean private EmailValidationFeignClient emailValidationFeignClient;
 
   @Test
   void shouldSaveAndFindLeadById_whenValidData() {

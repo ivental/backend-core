@@ -12,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
 import ru.mentee.power.crm.spring.model.Company;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
@@ -22,6 +24,8 @@ public class LeadRepositoryJpaTest {
   @Autowired private LeadRepositoryJpa repository;
 
   @Autowired private CompanyRepository companyRepository;
+
+  @MockitoBean private EmailValidationFeignClient emailValidationFeignClient;
 
   private Lead lead1;
   private Lead lead2;
