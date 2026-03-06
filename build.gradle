@@ -4,7 +4,7 @@ plugins {
     id 'checkstyle'
     id 'jacoco'
     id 'gg.jte.gradle' version '3.2.1'
-    id 'org.springframework.boot' version '3.5.8'
+    id 'org.springframework.boot' version '3.5.9'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'com.diffplug.spotless' version '8.2.1'
 }
@@ -25,47 +25,87 @@ ext {
     tomcatVersion = '11.0.1'
     jteVersion = '3.2.1'
     jteSpringBootVersion = '3.2.1'
-    springBootVersion = '3.5.8'
+    springBootVersion = '3.5.9'
     validationApiVersion = '3.0.2'
     hibernateValidatorVersion = '8.0.1.Final'
     h2Version = '2.3.232'
     postgresqlVersion = '42.7.8'
     liquibaseVersion = '5.0.1'
     spotlessVersion = '8.2.1'
+    mapstructVersion = '1.6.3'
+    lombokMapstructBindingVersion = '0.2.0'
+    resilience4jVersion = '2.2.0'
+    springCloudVersion = '2024.0.0'
+
 }
 
 dependencies {
+    // Spring Boot Starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.retry:spring-retry'
+
+    // Spring Cloud
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
+
+    // Resilience4j
+    implementation "io.github.resilience4j:resilience4j-spring-boot3:${resilience4jVersion}"
+    implementation "io.github.resilience4j:resilience4j-feign:${resilience4jVersion}"
+
+    // JTE
+    implementation "gg.jte:jte:${jteVersion}"
+    implementation "gg.jte:jte-runtime:${jteVersion}"
+    implementation "gg.jte:jte-spring-boot-starter-3:${jteSpringBootVersion}"
+
+    // Validation
+    implementation "jakarta.validation:jakarta.validation-api:${validationApiVersion}"
+    implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
+
+    // Servlet & Tomcat
+    implementation "jakarta.servlet:jakarta.servlet-api:${servletVersion}"
+    implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
+
+    // Database
+    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
+    implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+    // MapStruct
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+    // Связка Lombok и MapStruct
+    implementation "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+
+    // Test dependencies
     testImplementation platform("org.junit:junit-bom:${junitVersion}")
     testImplementation "org.junit.jupiter:junit-jupiter"
     testImplementation "org.assertj:assertj-core:${assertjVersion}"
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
-    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
     testImplementation "org.mockito:mockito-core:${mockitoVersion}"
     testImplementation "org.mockito:mockito-junit-jupiter:${mockitoVersion}"
-    implementation "jakarta.servlet:jakarta.servlet-api:${servletVersion}"
-    implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
-    implementation "gg.jte:jte:${jteVersion}"
-    implementation "gg.jte:jte-runtime:${jteVersion}"
-    implementation "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
-    implementation "gg.jte:jte-spring-boot-starter-3:${jteSpringBootVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework:spring-test'
-    implementation "jakarta.validation:jakarta.validation-api:${validationApiVersion}"
-    implementation "org.hibernate.validator:hibernate-validator:${hibernateValidatorVersion}"
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    runtimeOnly "org.postgresql:postgresql:${postgresqlVersion}"
-    testRuntimeOnly "com.h2database:h2:${h2Version}"
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'com.h2database:h2'
-    implementation 'org.springframework.retry:spring-retry'
-    implementation "org.liquibase:liquibase-core:${liquibaseVersion}"
-    implementation "com.diffplug.spotless:spotless-plugin-gradle:${spotlessVersion}"
     testImplementation 'org.wiremock:wiremock-standalone:3.4.2'
-    implementation 'io.github.resilience4j:resilience4j-spring-boot3:2.2.0'
-    implementation 'io.github.resilience4j:resilience4j-feign:2.2.0'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:4.1.0'
+
+    testRuntimeOnly "com.h2database:h2:${h2Version}"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
+
+
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs += [
+            '-Amapstruct.defaultComponentModel=spring',
+            '-Amapstruct.unmappedTargetPolicy=ERROR'
+    ]
 }
 
 jte {
