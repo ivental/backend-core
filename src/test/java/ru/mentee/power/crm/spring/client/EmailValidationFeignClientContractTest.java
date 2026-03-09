@@ -51,7 +51,6 @@ public class EmailValidationFeignClientContractTest {
 
   @Test
   void shouldReturnInvalidResponse_whenEmailIsInvalid(WireMockRuntimeInfo wmRuntimeInfo) {
-    // Given: Contract - external API returns valid=false
     stubFor(
         get(urlPathEqualTo("/api/validate/email"))
             .withQueryParam("email", equalTo("invalid@bad.email"))
@@ -65,33 +64,24 @@ public class EmailValidationFeignClientContractTest {
                 }
                 """)));
 
-    // When
     EmailValidationResponse response = feignClient.validateEmail("invalid@bad.email");
-
-    // Then
     assertThat(response.valid()).isFalse();
   }
 
   @Test
   void shouldThrowFeignException_whenExternalServiceReturns500() {
-    // Given: External API returns 500 Internal Server Error
     stubFor(
         get(urlPathEqualTo("/api/validate/email"))
             .willReturn(serverError().withBody("Internal Server Error")));
-
-    // When/Then: Feign throws exception
     assertThatThrownBy(() -> feignClient.validateEmail("any@email.com"))
         .isInstanceOf(feign.FeignException.class);
   }
 
   @Test
   void shouldThrowFeignException_whenExternalServiceReturns400() {
-    // Given: External API returns 400 Bad Request
     stubFor(
         get(urlPathEqualTo("/api/validate/email"))
             .willReturn(badRequest().withBody("{\"error\": \"Invalid email format\"}")));
-
-    // When/Then: Feign throws exception for 4xx errors
     assertThatThrownBy(() -> feignClient.validateEmail("not-an-email"))
         .isInstanceOf(feign.FeignException.BadRequest.class);
   }

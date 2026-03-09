@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,8 @@ import ru.mentee.power.crm.spring.controller.DealController;
 import ru.mentee.power.crm.spring.controller.DealControllerJpa;
 import ru.mentee.power.crm.spring.controller.LeadControllerJpa;
 import ru.mentee.power.crm.spring.dto.CreateLeadRequest;
+import ru.mentee.power.crm.spring.dto.UpdateLeadRequest;
+import ru.mentee.power.crm.spring.exception.EntityNotFoundException;
 import ru.mentee.power.crm.spring.model.Company;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
@@ -80,8 +81,7 @@ public class LeadRestControllerTest {
   @Test
   void shouldReturn404_whenGetNonExistentLead() throws Exception {
     UUID id = UUID.randomUUID();
-    when(leadService.findById(id)).thenReturn(Optional.empty());
-
+    when(leadService.findById(id)).thenThrow(new EntityNotFoundException("Lead", id.toString()));
     mockMvc.perform(get("/api/leads/{id}", id)).andExpect(status().isNotFound());
   }
 
@@ -96,7 +96,7 @@ public class LeadRestControllerTest {
             .status(LeadStatusJpa.NEW)
             .createdAt(OffsetDateTime.now())
             .build();
-    when(leadService.findById(id)).thenReturn(Optional.of(lead));
+    when(leadService.findById(id)).thenReturn(lead);
 
     mockMvc
         .perform(get("/api/leads/{id}", id))
@@ -142,20 +142,20 @@ public class LeadRestControllerTest {
   @Test
   void shouldReturn404_whenUpdateNonExistentLead() throws Exception {
     UUID id = UUID.randomUUID();
-    Lead leadToUpdate =
-        Lead.builder()
-            .email("ivi@gmail.com")
-            .phone("+7912")
-            .status(LeadStatusJpa.CONTACTED)
-            .build();
 
-    when(leadService.updateLead(any(UUID.class), any(Lead.class))).thenReturn(Optional.empty());
+    when(leadService.findById(id)).thenThrow(new EntityNotFoundException("Lead", id.toString()));
+
+    UpdateLeadRequest request = new UpdateLeadRequest();
+    request.setEmail("ivi@gmail.com");
+    request.setPhone("+7912");
+    request.setStatus(LeadStatusJpa.CONTACTED);
+    request.setCompanyId(UUID.randomUUID()); // если нужно
 
     mockMvc
         .perform(
             put("/api/leads/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(leadToUpdate)))
+                .content(objectMapper.writeValueAsString(request))) // ← отправляем request
         .andExpect(status().isNotFound());
   }
 

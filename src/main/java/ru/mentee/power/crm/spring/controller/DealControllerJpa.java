@@ -35,10 +35,7 @@ public class DealControllerJpa {
 
   @GetMapping("/convert/{leadId}")
   public String showConvertForm(@PathVariable UUID leadId, Model model) {
-    Lead lead =
-        leadService
-            .findById(leadId)
-            .orElseThrow(() -> new IllegalArgumentException("Lead not found: " + leadId));
+    Lead lead = leadService.findById(leadId);
     model.addAttribute("lead", lead);
     return "jpa-deals/convert";
   }
