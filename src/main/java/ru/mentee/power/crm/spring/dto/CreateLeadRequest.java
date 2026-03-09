@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CreateLeadRequest {
-  @NotBlank(message = "{lead.email.notblank}")
-  @Email(message = "{lead.email.email}")
+  @NotBlank(message = "Email обязателен")
+  @Email(message = "Email должен быть в корректном формате")
   @Size(max = 100, message = "{lead.email.size}")
   private String email;
 

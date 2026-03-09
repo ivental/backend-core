@@ -1,10 +1,12 @@
 package ru.mentee.power.crm.spring.rest;
 
+import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.mentee.power.crm.spring.dto.CreateLeadRequest;
 import ru.mentee.power.crm.spring.dto.LeadResponse;
@@ -15,6 +17,7 @@ import ru.mentee.power.crm.spring.service.LeadServiceJpa;
 @RestController
 @RequestMapping("/api/leads")
 @RequiredArgsConstructor
+@Validated
 public class LeadRestController {
 
   private final LeadServiceJpa leadService;
@@ -37,7 +40,7 @@ public class LeadRestController {
   }
 
   @PostMapping
-  public ResponseEntity<LeadResponse> createLead(@RequestBody CreateLeadRequest request) {
+  public ResponseEntity<LeadResponse> createLead(@Valid @RequestBody CreateLeadRequest request) {
     var lead = leadMapper.toEntity(request);
     var savedLead = leadService.createLead(lead);
     var response = leadMapper.toResponse(savedLead);

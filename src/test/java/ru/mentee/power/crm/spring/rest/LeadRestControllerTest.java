@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.mentee.power.crm.spring.controller.DealController;
 import ru.mentee.power.crm.spring.controller.DealControllerJpa;
 import ru.mentee.power.crm.spring.controller.LeadControllerJpa;
+import ru.mentee.power.crm.spring.dto.CreateLeadRequest;
 import ru.mentee.power.crm.spring.model.Company;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
@@ -108,21 +109,19 @@ public class LeadRestControllerTest {
   @Test
   void shouldReturn201WithLocation_whenCreateLead() throws Exception {
     UUID id = UUID.randomUUID();
-    Lead lead =
-        Lead.builder()
-            .email("ive@gmail.com")
-            .phone("+7911")
-            .company(Company.builder().id(UUID.randomUUID()).build())
-            .status(LeadStatusJpa.NEW)
-            .build();
+    UUID companyId = UUID.randomUUID();
+    CreateLeadRequest request = new CreateLeadRequest();
+    request.setEmail("ive@gmail.com");
+    request.setPhone("+7911");
+    request.setCompanyId(companyId);
 
     Lead createdLead =
         Lead.builder()
             .id(id)
-            .email(lead.getEmail())
-            .phone(lead.getPhone())
-            .company(lead.getCompany())
-            .status(lead.getStatus())
+            .email(request.getEmail())
+            .phone(request.getPhone())
+            .company(Company.builder().id(companyId).build())
+            .status(LeadStatusJpa.NEW)
             .createdAt(OffsetDateTime.now())
             .version(0L)
             .build();
@@ -133,7 +132,7 @@ public class LeadRestControllerTest {
         .perform(
             post("/api/leads")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(lead)))
+                .content(objectMapper.writeValueAsString(request)))
         .andExpect(status().isCreated())
         .andExpect(header().string("Location", "/api/leads/" + id))
         .andExpect(jsonPath("$.id").value(id.toString()))

@@ -2,13 +2,11 @@ package ru.mentee.power.crm.spring.controller;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -68,7 +66,6 @@ public class LeadControllerJpa {
       @RequestParam LeadStatusJpa status,
       Model model) {
 
-
     try {
       Company companyEntity = companyService.findOrCreateByName(company);
 
@@ -97,16 +94,17 @@ public class LeadControllerJpa {
 
   @PostMapping("/{id}")
   public String updateLead(
-          @PathVariable UUID id,
-          @RequestParam String email,
-          @RequestParam String phone,
-          @RequestParam String company,
-          @RequestParam LeadStatusJpa status,
-          Model model) {
+      @PathVariable UUID id,
+      @RequestParam String email,
+      @RequestParam String phone,
+      @RequestParam String company,
+      @RequestParam LeadStatusJpa status,
+      Model model) {
 
     try {
       Company companyEntity = companyService.findOrCreateByName(company);
-      Lead updatedLead = Lead.builder()
+      Lead updatedLead =
+          Lead.builder()
               .id(id)
               .email(email)
               .phone(phone)
@@ -120,7 +118,9 @@ public class LeadControllerJpa {
     } catch (Exception e) {
       e.printStackTrace();
       model.addAttribute("error", "Ошибка при обновлении лида: " + e.getMessage());
-      Lead existingLead = leadService.findById(id)
+      Lead existingLead =
+          leadService
+              .findById(id)
               .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Lead not found"));
       model.addAttribute("lead", existingLead);
       return "jpa-leads/edit";
@@ -134,31 +134,31 @@ public class LeadControllerJpa {
   }
 
   @GetMapping("/update-email")
-  public String showUpdateEmailsForm(Model model){
-    model.addAttribute("companyName","");
-    model.addAttribute("newEmail","");
+  public String showUpdateEmailsForm(Model model) {
+    model.addAttribute("companyName", "");
+    model.addAttribute("newEmail", "");
     return "jpa-leads/update-email";
   }
 
   @PostMapping("/update-email")
   public String updateEmails(
-          @RequestParam String companyName,
-          @RequestParam String newEmail,
-          RedirectAttributes redirectAttributes) { // RedirectAttributes вместо Model
+      @RequestParam String companyName,
+      @RequestParam String newEmail,
+      RedirectAttributes redirectAttributes) { // RedirectAttributes вместо Model
 
     int count = leadService.updateEmailsByCompanyName(companyName, newEmail);
 
     if (count > 0) {
-      redirectAttributes.addFlashAttribute("message",
-              String.format("Обновлено %d лидов компании '%s'", count, companyName));
+      redirectAttributes.addFlashAttribute(
+          "message", String.format("Обновлено %d лидов компании '%s'", count, companyName));
     } else {
-      redirectAttributes.addFlashAttribute("message",
-              String.format("Лиды компании '%s' не найдены", companyName));
+      redirectAttributes.addFlashAttribute(
+          "message", String.format("Лиды компании '%s' не найдены", companyName));
     }
 
     return "redirect:/jpa-leads/update-email"; // Редирект на GET
   }
 }
 
-// без bulk операции - второй способ данной задачи, сравнить оба способа и решить какой из них удобнее
-
+// без bulk операции - второй способ данной задачи, сравнить оба способа и решить какой из них
+// удобнее
