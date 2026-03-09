@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.mentee.power.crm.spring.dto.CreateLeadRequest;
 import ru.mentee.power.crm.spring.dto.LeadResponse;
 import ru.mentee.power.crm.spring.dto.UpdateLeadRequest;
+import ru.mentee.power.crm.spring.exception.EntityNotFoundException;
 import ru.mentee.power.crm.spring.mapper.LeadMapper;
+import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.service.LeadServiceJpa;
 
 @RestController
@@ -32,11 +34,9 @@ public class LeadRestController {
 
   @GetMapping("/{id}")
   public ResponseEntity<LeadResponse> getLeadById(@PathVariable UUID id) {
-    return leadService
-        .findById(id)
-        .map(leadMapper::toResponse)
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+    Lead lead = leadService.findById(id);
+    LeadResponse response = leadMapper.toResponse(lead);
+    return ResponseEntity.ok(response);
   }
 
   @PostMapping
@@ -51,21 +51,16 @@ public class LeadRestController {
 
   @PutMapping("/{id}")
   public ResponseEntity<LeadResponse> updateLead(
-      @PathVariable UUID id, @RequestBody UpdateLeadRequest request) {
+      @PathVariable UUID id, @Valid @RequestBody UpdateLeadRequest request) {
 
-    return leadService
-        .findById(id)
-        .map(
-            existingLead -> {
-              leadMapper.updateEntity(request, existingLead);
-              var updatedLead =
-                  leadService
-                      .updateLead(id, existingLead)
-                      .orElseThrow(() -> new RuntimeException("Failed to update lead"));
-              return leadMapper.toResponse(updatedLead);
-            })
-        .map(ResponseEntity::ok)
-        .orElse(ResponseEntity.notFound().build());
+    try {
+      Lead existingLead = leadService.findById(id);
+      leadMapper.updateEntity(request, existingLead);
+      Lead updatedLead = leadService.updateLead(id, existingLead);
+      return ResponseEntity.ok(leadMapper.toResponse(updatedLead));
+    } catch (EntityNotFoundException e) {
+      return ResponseEntity.notFound().build();
+    }
   }
 
   @DeleteMapping("/{id}")

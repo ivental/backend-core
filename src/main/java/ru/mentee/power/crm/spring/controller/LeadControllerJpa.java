@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.mentee.power.crm.spring.exception.EntityNotFoundException;
 import ru.mentee.power.crm.spring.model.Company;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
@@ -84,12 +85,13 @@ public class LeadControllerJpa {
 
   @GetMapping("/{id}/edit")
   public String showEditForm(@PathVariable UUID id, Model model) {
-    Lead lead =
-        leadService
-            .findById(id)
-            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Lead not found"));
-    model.addAttribute("lead", lead);
-    return "jpa-leads/edit";
+    try {
+      Lead lead = leadService.findById(id);
+      model.addAttribute("lead", lead);
+      return "jpa-leads/edit";
+    } catch (EntityNotFoundException e) {
+      throw new ResponseStatusException(NOT_FOUND, e.getMessage());
+    }
   }
 
   @PostMapping("/{id}")
@@ -115,14 +117,19 @@ public class LeadControllerJpa {
       leadService.update(id, updatedLead);
       return "redirect:/jpa-leads";
 
+    } catch (EntityNotFoundException e) {
+      model.addAttribute("error", "Лид не найден: " + e.getMessage());
+
+      Lead emptyLead = Lead.builder().id(id).email(email).phone(phone).status(status).build();
+      model.addAttribute("lead", emptyLead);
+      return "jpa-leads/edit";
+
     } catch (Exception e) {
       e.printStackTrace();
       model.addAttribute("error", "Ошибка при обновлении лида: " + e.getMessage());
-      Lead existingLead =
-          leadService
-              .findById(id)
-              .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Lead not found"));
-      model.addAttribute("lead", existingLead);
+
+      Lead fallbackLead = Lead.builder().id(id).email(email).phone(phone).status(status).build();
+      model.addAttribute("lead", fallbackLead);
       return "jpa-leads/edit";
     }
   }
@@ -144,7 +151,7 @@ public class LeadControllerJpa {
   public String updateEmails(
       @RequestParam String companyName,
       @RequestParam String newEmail,
-      RedirectAttributes redirectAttributes) { // RedirectAttributes вместо Model
+      RedirectAttributes redirectAttributes) {
 
     int count = leadService.updateEmailsByCompanyName(companyName, newEmail);
 
@@ -156,9 +163,6 @@ public class LeadControllerJpa {
           "message", String.format("Лиды компании '%s' не найдены", companyName));
     }
 
-    return "redirect:/jpa-leads/update-email"; // Редирект на GET
+    return "redirect:/jpa-leads/update-email";
   }
 }
-
-// без bulk операции - второй способ данной задачи, сравнить оба способа и решить какой из них
-// удобнее

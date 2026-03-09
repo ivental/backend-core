@@ -13,13 +13,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
 import ru.mentee.power.crm.spring.client.EmailValidationResponse;
+import ru.mentee.power.crm.spring.exception.EntityNotFoundException;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
@@ -32,7 +31,6 @@ public class LeadServiceJpa {
   private static final Logger log = LoggerFactory.getLogger(LeadServiceJpa.class);
   private final EmailValidationFeignClient emailValidationClient;
 
-  // бизнес логика, ищет компании и меняет email
   @Transactional
   public int updateEmailsByCompanyName(String companyName, String baseEmail) {
     List<Lead> leads = repository.findByCompanyName(companyName);
@@ -73,8 +71,10 @@ public class LeadServiceJpa {
     return repository.findAll();
   }
 
-  public Optional<Lead> getLeadById(UUID id) {
-    return repository.findById(id);
+  public Lead getLeadById(UUID id) {
+    return repository
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Lead", id.toString()));
   }
 
   @Retry(name = "email-validation", fallbackMethod = "createLeadFallback")
@@ -97,17 +97,18 @@ public class LeadServiceJpa {
     return repository.save(lead);
   }
 
-  public Optional<Lead> updateLead(UUID id, Lead updatedLead) {
-    return repository
-        .findById(id)
-        .map(
-            existingLead -> {
-              existingLead.setEmail(updatedLead.getEmail());
-              existingLead.setPhone(updatedLead.getPhone());
-              existingLead.setCompany(updatedLead.getCompany());
-              existingLead.setStatus(updatedLead.getStatus());
-              return repository.save(existingLead);
-            });
+  public Lead updateLead(UUID id, Lead updatedLead) {
+    Lead existingLead =
+        repository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Lead", id.toString()));
+
+    existingLead.setEmail(updatedLead.getEmail());
+    existingLead.setPhone(updatedLead.getPhone());
+    existingLead.setCompany(updatedLead.getCompany());
+    existingLead.setStatus(updatedLead.getStatus());
+
+    return repository.save(existingLead);
   }
 
   public boolean deleteLead(UUID id) {
@@ -118,8 +119,10 @@ public class LeadServiceJpa {
     return false;
   }
 
-  public Optional<Lead> findById(UUID id) {
-    return repository.findById(id);
+  public Lead findById(UUID id) {
+    return repository
+        .findById(id)
+        .orElseThrow(() -> new EntityNotFoundException("Lead", id.toString()));
   }
 
   public Optional<Lead> findByEmail(String email) {
@@ -173,7 +176,7 @@ public class LeadServiceJpa {
 
   public void delete(UUID id) {
     if (!repository.existsById(id)) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+      throw new EntityNotFoundException("Lead", id.toString());
     }
     repository.deleteById(id);
   }
@@ -212,7 +215,7 @@ public class LeadServiceJpa {
     Lead lead =
         repository
             .findById(leadId)
-            .orElseThrow(() -> new IllegalArgumentException("Lead not found: " + leadId));
+            .orElseThrow(() -> new EntityNotFoundException("Lead", leadId.toString()));
     if (lead.getEmail().contains("fail")) {
       throw new RuntimeException("Simulated failure for lead: " + leadId);
     }

@@ -28,8 +28,6 @@ public interface LeadMapper {
   @Mapping(target = "status", ignore = true)
   @Mapping(target = "createdAt", ignore = true)
   @Mapping(target = "version", ignore = true)
-  @Mapping(target = "email", source = "request.email", qualifiedByName = "unwrapOptional")
-  @Mapping(target = "phone", source = "request.phone", qualifiedByName = "unwrapOptional")
   void updateEntity(UpdateLeadRequest request, @MappingTarget Lead entity);
 
   @Named("unwrapOptional")
