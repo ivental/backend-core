@@ -5,6 +5,7 @@
     <div class="max-w-md mx-auto mt-8">
         <h1 class="text-2xl font-bold mb-6">Редактирование лида</h1>
         <form action="/jpa-leads/${lead.getId().toString()}" method="post" class="space-y-4">
+            <input type="hidden" name="_method" value="put" />
             <input type="hidden" name="id" value="${String.valueOf(lead.getId())}">
 
             <!-- Email -->
