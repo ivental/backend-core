@@ -22,8 +22,6 @@ import ru.mentee.power.crm.spring.model.LeadStatusJpa;
 @Repository
 public interface LeadRepositoryJpa extends JpaRepository<Lead, UUID> {
 
-
-
   /** Поиск лида по email (точное совпадение). SQL: SELECT * FROM leads WHERE email = ? */
   Optional<Lead> findByEmail(String email);
 
@@ -32,7 +30,6 @@ public interface LeadRepositoryJpa extends JpaRepository<Lead, UUID> {
 
   /** Поиск лидов по названию компании. SQL: SELECT * FROM leads WHERE company = ? */
   List<Lead> findByCompany(Company company);
-
 
   /**
    * Подсчет количества лидов с определенным статусом. SQL: SELECT COUNT(*) FROM leads WHERE status
@@ -45,7 +42,6 @@ public interface LeadRepositoryJpa extends JpaRepository<Lead, UUID> {
    * ELSE false END FROM leads WHERE email = ?
    */
   boolean existsByEmail(String email);
-
 
   /**
    * Поиск лидов по части email (LIKE запрос). SQL: SELECT * FROM leads WHERE email LIKE
@@ -103,22 +99,15 @@ public interface LeadRepositoryJpa extends JpaRepository<Lead, UUID> {
   int updateStatusBulk(
       @Param("oldStatus") LeadStatusJpa oldStatus, @Param("newStatus") LeadStatusJpa newStatus);
 
-
-
-
   // Массовое обновление email
   @Modifying(clearAutomatically = true)
   @Query("UPDATE Lead l SET l.email = :newEmail WHERE l.company.name = :companyName")
   int updateEmailByCompanyName(
-          @Param("companyName") String companyName,
-          @Param("newEmail") String newEmail);
+      @Param("companyName") String companyName, @Param("newEmail") String newEmail);
 
-
-  @Query("SELECT CASE WHEN COUNT(l) > 0 THEN true ELSE false END FROM Lead l WHERE l.company.name = :companyName")
+  @Query(
+      "SELECT CASE WHEN COUNT(l) > 0 THEN true ELSE false END FROM Lead l WHERE l.company.name = :companyName")
   boolean existsByCompanyName(@Param("companyName") String companyName);
-
-
-
 
   @Modifying
   @Query("DELETE FROM Lead l WHERE l.status = :status")
