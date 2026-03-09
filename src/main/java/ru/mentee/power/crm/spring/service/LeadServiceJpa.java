@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
 import ru.mentee.power.crm.spring.client.EmailValidationResponse;
+import ru.mentee.power.crm.spring.model.Company;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
@@ -31,6 +32,32 @@ public class LeadServiceJpa {
   private final LeadRepositoryJpa repository;
   private static final Logger log = LoggerFactory.getLogger(LeadServiceJpa.class);
   private final EmailValidationFeignClient emailValidationClient;
+
+  // бизнес логика, ищет компании и меняет email
+  @Transactional
+  public int updateEmailsByCompanyName(String companyName, String baseEmail){
+    List<Lead> leads = repository.findByCompanyName(companyName);
+    int updated = 0;
+
+    for (int i = 0; i < leads.size(); i++) {
+      Lead lead = leads.get(i);
+      String newEmail;
+
+      if (i == 0) {
+        newEmail = baseEmail;
+      } else {
+        newEmail = baseEmail.replace("@",  + i + "@");
+      }
+
+      if (!lead.getEmail().equals(newEmail)) {
+        lead.setEmail(newEmail);
+        repository.save(lead);
+        updated++;
+      }
+    }
+
+    return updated;
+  }
 
   public Lead save(Lead lead) {
     return repository.save(lead);
