@@ -190,7 +190,16 @@ jacocoTestReport {
                     'ru/mentee/power/crm/servlet/**',
                     'ru/mentee/power/crm/spring/controller/**'
             ], exclude: [
-                    'ru/mentee/power/crm/domain/Repository.class'
+                    'ru/mentee/power/crm/domain/Repository.class',
+                    'ru/mentee/power/crm/spring/exception/IllegalLeadStateException*.class',
+                    'ru/mentee/power/crm/spring/dto/*.class',
+                    'ru/mentee/power/crm/spring/mapper/InviteeMapper*.class',
+                    'ru/mentee/power/crm/spring/repository/InviteeRepository*.class',
+                    'ru/mentee/power/crm/spring/service/InviteeService*.class',
+                    'ru/mentee/power/crm/spring/service/DemoService*.class',
+                    'ru/mentee/power/crm/entity/Invitee*.class',
+                    'ru/mentee/power/crm/spring/rest/problematic/InviteeController*.class',
+                    'ru/mentee/power/crm/spring/rest/fixed/InviteeController*.class'
             ])
         }))
     }

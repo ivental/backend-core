@@ -18,8 +18,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -29,30 +27,25 @@ import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
 import ru.mentee.power.crm.spring.repository.CompanyRepository;
 import ru.mentee.power.crm.spring.repository.DealRepositoryJpa;
+import ru.mentee.power.crm.spring.repository.InviteeRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
-import ru.mentee.power.crm.spring.service.DealServiceJpa;
+import ru.mentee.power.crm.spring.rest.fixed.InviteeController;
+import ru.mentee.power.crm.spring.service.InviteeService;
 import ru.mentee.power.crm.spring.service.LeadService;
 
-@WebMvcTest(
-    controllers = LeadController.class,
-    excludeFilters =
-        @ComponentScan.Filter(
-            type = FilterType.ASSIGNABLE_TYPE,
-            classes = {DealControllerJpa.class, DealServiceJpa.class, DealRepositoryJpa.class}))
+@WebMvcTest(controllers = LeadController.class)
 @ActiveProfiles("test")
 class LeadControllerTest {
 
   @Autowired private MockMvc mockMvc;
-
   @MockitoBean private LeadService leadService;
-
   @MockitoBean private DealRepositoryJpa dealRepositoryJpa;
-
   @MockitoBean private EmailValidationFeignClient emailValidationFeignClient;
-
   @MockitoBean private LeadRepositoryJpa leadRepositoryJpa;
-
   @MockitoBean private CompanyRepository companyRepository;
+  @MockitoBean private InviteeController inviteeController;
+  @MockitoBean private InviteeRepository inviteeRepository;
+  @MockitoBean private InviteeService inviteeService;
 
   private Lead existingLead;
   private UUID validId;

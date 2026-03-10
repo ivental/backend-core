@@ -20,10 +20,13 @@ import ru.mentee.power.crm.spring.controller.DealControllerJpa;
 import ru.mentee.power.crm.spring.controller.LeadControllerJpa;
 import ru.mentee.power.crm.spring.repository.CompanyRepository;
 import ru.mentee.power.crm.spring.repository.DealRepositoryJpa;
+import ru.mentee.power.crm.spring.repository.InviteeRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
 import ru.mentee.power.crm.spring.rest.LeadRestController;
+import ru.mentee.power.crm.spring.rest.fixed.InviteeController;
 import ru.mentee.power.crm.spring.service.CompanyServiceJpa;
 import ru.mentee.power.crm.spring.service.DealServiceJpa;
+import ru.mentee.power.crm.spring.service.InviteeService;
 import ru.mentee.power.crm.spring.service.LeadServiceJpa;
 
 @WebMvcTest(LeadRestController.class)
@@ -51,6 +54,12 @@ public class GlobalExceptionHandlerTest {
   @MockitoBean private DealController dealController;
 
   @MockitoBean private LeadControllerJpa leadControllerJpa;
+
+  @MockitoBean private InviteeController inviteeController;
+
+  @MockitoBean private InviteeRepository inviteeRepository;
+
+  @MockitoBean private InviteeService inviteeService;
 
   @Test
   void shouldReturn404_whenEntityNotFound() throws Exception {
