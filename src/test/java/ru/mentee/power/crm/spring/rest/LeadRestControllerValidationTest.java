@@ -21,9 +21,12 @@ import ru.mentee.power.crm.spring.dto.CreateLeadRequest;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.repository.CompanyRepository;
 import ru.mentee.power.crm.spring.repository.DealRepositoryJpa;
+import ru.mentee.power.crm.spring.repository.InviteeRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
+import ru.mentee.power.crm.spring.rest.fixed.InviteeController;
 import ru.mentee.power.crm.spring.service.CompanyServiceJpa;
 import ru.mentee.power.crm.spring.service.DealServiceJpa;
+import ru.mentee.power.crm.spring.service.InviteeService;
 import ru.mentee.power.crm.spring.service.LeadServiceJpa;
 
 @WebMvcTest()
@@ -42,6 +45,9 @@ public class LeadRestControllerValidationTest {
   @MockitoBean private DealControllerJpa dealControllerJpa;
   @MockitoBean private DealController dealController;
   @MockitoBean private LeadControllerJpa leadControllerJpa;
+  @MockitoBean private InviteeController inviteeController;
+  @MockitoBean private InviteeRepository inviteeRepository;
+  @MockitoBean private InviteeService inviteeService;
 
   @Test
   void shouldReturn400_whenEmailIsInvalidFormat() throws Exception {
