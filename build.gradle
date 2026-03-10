@@ -7,6 +7,7 @@ plugins {
     id 'org.springframework.boot' version '3.5.9'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'com.diffplug.spotless' version '8.2.1'
+    id 'org.openapi.generator' version '7.1.0'
 }
 
 group = 'ru.mentee.power'
@@ -36,6 +37,8 @@ ext {
     lombokMapstructBindingVersion = '0.2.0'
     resilience4jVersion = '2.2.0'
     springCloudVersion = '2024.0.0'
+    openApiGeneratorVersion = '7.1.0'
+    springdocVersion = '2.8.5'
 
 }
 
@@ -82,6 +85,12 @@ dependencies {
     // Spring Boot Starter Validation (Jakarta Bean Validation + Hibernate Validator)
     implementation "org.springframework.boot:spring-boot-starter-validation"
 
+    // Sprint 8: OpenAPI документация
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
+
+    // ✅ OpenAPI Generator - JsonNullable
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+
     // Test dependencies
     testImplementation platform("org.junit:junit-bom:${junitVersion}")
     testImplementation "org.junit.jupiter:junit-jupiter"
@@ -102,6 +111,28 @@ dependencyManagement {
     }
 }
 
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = project.file("src/main/resources/api/api-spec.yaml").absolutePath.replace('\\', '/')
+    outputDir = "${buildDir}/generated"
+    apiPackage = "ru.mentee.power.crm.spring.rest.generated"
+    modelPackage = "ru.mentee.power.crm.spring.dto.generated"
+    configOptions = [
+            interfaceOnly: "true",
+            useTags: "true",
+            dateLibrary: "java8",
+            useSpringBoot3: "true",
+            documentationProvider: "none",
+    ]
+}
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir}/generated/src/main/java"
+        }
+    }
+}
+compileJava.dependsOn tasks.openApiGenerate
 
 
 tasks.withType(JavaCompile) {

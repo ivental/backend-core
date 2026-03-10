@@ -1,37 +1,37 @@
 package ru.mentee.power.crm.spring.mapper;
 
-import java.util.Optional;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.Named;
-import ru.mentee.power.crm.spring.dto.CreateLeadRequest;
-import ru.mentee.power.crm.spring.dto.LeadResponse;
-import ru.mentee.power.crm.spring.dto.UpdateLeadRequest;
+import ru.mentee.power.crm.spring.dto.generated.CreateLeadRequest;
+import ru.mentee.power.crm.spring.dto.generated.LeadResponse;
+import ru.mentee.power.crm.spring.dto.generated.UpdateLeadRequest;
 import ru.mentee.power.crm.spring.model.Lead;
 
 @Mapper(componentModel = "spring")
 public interface LeadMapper {
 
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "company", ignore = true)
-  @Mapping(target = "status", ignore = true)
+  @Mapping(target = "company", ignore = true) // Нужно будет установить отдельно
   @Mapping(target = "createdAt", ignore = true)
   @Mapping(target = "version", ignore = true)
+  @Mapping(target = "status", constant = "NEW")
   Lead toEntity(CreateLeadRequest request);
 
   @Mapping(source = "company.id", target = "companyId")
-  LeadResponse toResponse(Lead entity);
+  @Mapping(source = "status", target = "status")
+  LeadResponse toGeneratedResponse(Lead lead);
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "company", ignore = true)
-  @Mapping(target = "status", ignore = true)
   @Mapping(target = "createdAt", ignore = true)
   @Mapping(target = "version", ignore = true)
-  void updateEntity(UpdateLeadRequest request, @MappingTarget Lead entity);
+  void updateEntityFromGenerated(UpdateLeadRequest request, @MappingTarget Lead lead);
 
-  @Named("unwrapOptional")
-  default <T> T unwrapOptional(Optional<T> optional) {
-    return optional.isPresent() ? optional.orElse(null) : null;
-  }
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "company", ignore = true)
+  @Mapping(target = "createdAt", ignore = true)
+  @Mapping(target = "version", ignore = true)
+  @Mapping(target = "status", constant = "NEW")
+  Lead toEntityFromGenerated(CreateLeadRequest request);
 }
