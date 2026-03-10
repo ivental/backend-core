@@ -4,6 +4,9 @@ public enum LeadStatusJpa {
   NEW("Новый"),
   CONTACTED("Связались"),
   QUALIFIED("Квалифицирован"),
+  PROPOSAL("Предложение отправлено"),
+  NEGOTIATION("Переговоры"),
+  WON("Успешно"),
   LOST("Утерян");
 
   private final String russianName;

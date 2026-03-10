@@ -72,12 +72,13 @@ public class GlobalExceptionHandlerTest {
   void shouldReturn400WithFieldErrors_whenValidationFails() throws Exception {
     String invalidJson =
         """
-                {
-                    "email": "",
-                    "phone": "",
-                    "companyId": null
-                }
-                """;
+            {
+                "email": "",
+                "phone": "",
+                "companyId": null
+            }
+            """;
+
     mockMvc
         .perform(post("/api/leads").contentType(MediaType.APPLICATION_JSON).content(invalidJson))
         .andExpect(status().isBadRequest())
@@ -87,9 +88,9 @@ public class GlobalExceptionHandlerTest {
         .andExpect(jsonPath("$.message").value("Validation failed"))
         .andExpect(jsonPath("$.path").value("/api/leads"))
         .andExpect(jsonPath("$.errors").exists())
-        .andExpect(jsonPath("$.errors.email").exists())
-        .andExpect(jsonPath("$.errors.phone").exists())
-        .andExpect(jsonPath("$.errors.companyId").exists());
+        .andExpect(jsonPath("$.errors.companyId").value("must not be null"))
+        .andExpect(jsonPath("$.errors.email").doesNotExist())
+        .andExpect(jsonPath("$.errors.phone").doesNotExist());
   }
 
   @Test

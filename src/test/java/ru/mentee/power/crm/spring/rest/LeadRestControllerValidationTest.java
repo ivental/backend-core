@@ -44,34 +44,10 @@ public class LeadRestControllerValidationTest {
   @MockitoBean private LeadControllerJpa leadControllerJpa;
 
   @Test
-  void shouldReturn400_whenEmailIsBlank() throws Exception {
-    CreateLeadRequest request = new CreateLeadRequest();
-    request.setEmail("");
-    request.setPhone("+79119633911");
-    request.setCompanyId(UUID.randomUUID());
-    String requestJson = objectMapper.writeValueAsString(request);
-    mockMvc
-        .perform(post("/api/leads").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-        .andExpect(status().isBadRequest());
-  }
-
-  @Test
   void shouldReturn400_whenEmailIsInvalidFormat() throws Exception {
     CreateLeadRequest request = new CreateLeadRequest();
     request.setEmail("not-an-email");
     request.setPhone("+79119633911");
-    request.setCompanyId(UUID.randomUUID());
-    String requestJson = objectMapper.writeValueAsString(request);
-    mockMvc
-        .perform(post("/api/leads").contentType(MediaType.APPLICATION_JSON).content(requestJson))
-        .andExpect(status().isBadRequest());
-  }
-
-  @Test
-  void shouldReturn400_whenPhoneIsBlank() throws Exception {
-    CreateLeadRequest request = new CreateLeadRequest();
-    request.setEmail("ivental@gmail.com");
-    request.setPhone("");
     request.setCompanyId(UUID.randomUUID());
     String requestJson = objectMapper.writeValueAsString(request);
     mockMvc

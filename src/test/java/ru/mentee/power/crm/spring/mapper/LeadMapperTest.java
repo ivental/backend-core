@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import ru.mentee.power.crm.spring.dto.CreateLeadRequest;
-import ru.mentee.power.crm.spring.dto.LeadResponse;
+import ru.mentee.power.crm.spring.dto.generated.CreateLeadRequest;
+import ru.mentee.power.crm.spring.dto.generated.LeadResponse;
 import ru.mentee.power.crm.spring.model.Company;
 import ru.mentee.power.crm.spring.model.Lead;
 import ru.mentee.power.crm.spring.model.LeadStatusJpa;
@@ -25,17 +25,19 @@ public class LeadMapperTest {
   @Test
   void shouldMapCreateRequestToEntity_whenValidData() {
     UUID companyId = UUID.randomUUID();
-    CreateLeadRequest request =
-        new CreateLeadRequest("ivan@example.com", "+79991234567", companyId);
+    CreateLeadRequest request = new CreateLeadRequest();
+    request.setEmail("ivan@example.com");
+    request.setPhone("+79991234567");
+    request.setCompanyId(companyId);
 
-    Lead lead = leadMapper.toEntity(request);
+    Lead lead = leadMapper.toEntityFromGenerated(request);
 
     assertThat(lead).isNotNull();
     assertThat(lead.getId()).isNull();
     assertThat(lead.getEmail()).isEqualTo("ivan@example.com");
     assertThat(lead.getPhone()).isEqualTo("+79991234567");
     assertThat(lead.getCompany()).isNull();
-    assertThat(lead.getStatus()).isNull();
+    assertThat(lead.getStatus()).isEqualTo(LeadStatusJpa.NEW);
     assertThat(lead.getCreatedAt()).isNull();
     assertThat(lead.getVersion()).isNull();
   }
@@ -55,20 +57,18 @@ public class LeadMapperTest {
             .email("ivan@example.com")
             .phone("+79991234567")
             .company(company)
-            .status(LeadStatusJpa.NEW)
             .createdAt(now)
             .version(1L)
             .build();
 
-    LeadResponse response = leadMapper.toResponse(lead);
+    LeadResponse response = leadMapper.toGeneratedResponse(lead);
 
     assertThat(response).isNotNull();
-    assertThat(response.id()).isEqualTo(leadId);
-    assertThat(response.email()).isEqualTo("ivan@example.com");
-    assertThat(response.phone()).isEqualTo("+79991234567");
-    assertThat(response.companyId()).isEqualTo(companyId);
-    assertThat(response.status()).isEqualTo(LeadStatusJpa.NEW);
-    assertThat(response.createdAt()).isEqualTo(now);
+    assertThat(response.getId()).isEqualTo(leadId);
+    assertThat(response.getEmail()).isEqualTo("ivan@example.com");
+    assertThat(response.getPhone()).isEqualTo("+79991234567");
+    assertThat(response.getCompanyId()).isEqualTo(companyId);
+    assertThat(response.getCreatedAt()).isEqualTo(now);
   }
 
   @Test
@@ -82,26 +82,24 @@ public class LeadMapperTest {
             .email("ivan@example.com")
             .phone("+79991234567")
             .company(null)
-            .status(LeadStatusJpa.NEW)
             .createdAt(now)
             .version(1L)
             .build();
 
-    LeadResponse response = leadMapper.toResponse(lead);
+    LeadResponse response = leadMapper.toGeneratedResponse(lead);
 
     assertThat(response).isNotNull();
-    assertThat(response.id()).isEqualTo(leadId);
-    assertThat(response.email()).isEqualTo("ivan@example.com");
-    assertThat(response.phone()).isEqualTo("+79991234567");
-    assertThat(response.companyId()).isNull();
-    assertThat(response.status()).isEqualTo(LeadStatusJpa.NEW);
-    assertThat(response.createdAt()).isEqualTo(now);
+    assertThat(response.getId()).isEqualTo(leadId);
+    assertThat(response.getEmail()).isEqualTo("ivan@example.com");
+    assertThat(response.getPhone()).isEqualTo("+79991234567");
+    assertThat(response.getCompanyId()).isNull();
+    assertThat(response.getCreatedAt()).isEqualTo(now);
   }
 
   @Test
   void shouldHandleNullInput() {
 
     assertThat(leadMapper.toEntity(null)).isNull();
-    assertThat(leadMapper.toResponse(null)).isNull();
+    assertThat(leadMapper.toGeneratedResponse(null)).isNull();
   }
 }

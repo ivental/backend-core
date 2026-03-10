@@ -9,6 +9,15 @@ gg:
 spring:
   application:
     name: m-crm
+
+  springdoc:
+    api-docs:
+      path: /v3/api-docs
+    swagger-ui:
+      path: /swagger-ui.html
+      operationsSorter: method
+      tagsSorter: alpha
+
   jackson:
     default-property-inclusion: non_null
     serialization:
