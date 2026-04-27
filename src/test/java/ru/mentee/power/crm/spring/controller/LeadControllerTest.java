@@ -30,8 +30,10 @@ import ru.mentee.power.crm.spring.repository.DealRepositoryJpa;
 import ru.mentee.power.crm.spring.repository.InviteeRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
 import ru.mentee.power.crm.spring.rest.fixed.InviteeController;
+import ru.mentee.power.crm.spring.service.EmployeeService;
 import ru.mentee.power.crm.spring.service.InviteeService;
 import ru.mentee.power.crm.spring.service.LeadService;
+import ru.mentee.power.crm.spring.repository.EmployeeRepository;
 
 @WebMvcTest(controllers = LeadController.class)
 @ActiveProfiles("test")
@@ -46,6 +48,8 @@ class LeadControllerTest {
   @MockitoBean private InviteeController inviteeController;
   @MockitoBean private InviteeRepository inviteeRepository;
   @MockitoBean private InviteeService inviteeService;
+  @MockitoBean private EmployeeService employeeService;
+  @MockitoBean private EmployeeRepository employeeRepository;
 
   private Lead existingLead;
   private UUID validId;

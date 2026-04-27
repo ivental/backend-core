@@ -32,8 +32,10 @@ import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
 import ru.mentee.power.crm.spring.rest.fixed.InviteeController;
 import ru.mentee.power.crm.spring.service.CompanyServiceJpa;
 import ru.mentee.power.crm.spring.service.DealServiceJpa;
+import ru.mentee.power.crm.spring.service.EmployeeService;
 import ru.mentee.power.crm.spring.service.InviteeService;
 import ru.mentee.power.crm.spring.service.LeadServiceJpa;
+import ru.mentee.power.crm.spring.repository.EmployeeRepository;
 
 @WebMvcTest(LeadRestController.class)
 @ActiveProfiles("test")
@@ -66,6 +68,10 @@ public class LeadRestControllerTest {
   @MockitoBean private InviteeRepository inviteeRepository;
 
   @MockitoBean private InviteeService inviteeService;
+
+  @MockitoBean private EmployeeService employeeService;
+
+  @MockitoBean private EmployeeRepository employeeRepository;
 
   @Test
   void shouldReturn200_whenGetAllLeads() throws Exception {
