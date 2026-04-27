@@ -20,6 +20,7 @@ import ru.mentee.power.crm.spring.controller.DealControllerJpa;
 import ru.mentee.power.crm.spring.controller.LeadControllerJpa;
 import ru.mentee.power.crm.spring.repository.CompanyRepository;
 import ru.mentee.power.crm.spring.repository.DealRepositoryJpa;
+import ru.mentee.power.crm.spring.repository.EmployeeRepository;
 import ru.mentee.power.crm.spring.repository.InviteeRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
 import ru.mentee.power.crm.spring.rest.LeadRestController;
@@ -29,7 +30,6 @@ import ru.mentee.power.crm.spring.service.DealServiceJpa;
 import ru.mentee.power.crm.spring.service.EmployeeService;
 import ru.mentee.power.crm.spring.service.InviteeService;
 import ru.mentee.power.crm.spring.service.LeadServiceJpa;
-import ru.mentee.power.crm.spring.repository.EmployeeRepository;
 
 @WebMvcTest(LeadRestController.class)
 @ActiveProfiles("test")

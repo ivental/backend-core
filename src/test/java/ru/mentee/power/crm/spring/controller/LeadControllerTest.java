@@ -27,13 +27,13 @@ import ru.mentee.power.crm.model.LeadStatus;
 import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
 import ru.mentee.power.crm.spring.repository.CompanyRepository;
 import ru.mentee.power.crm.spring.repository.DealRepositoryJpa;
+import ru.mentee.power.crm.spring.repository.EmployeeRepository;
 import ru.mentee.power.crm.spring.repository.InviteeRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepositoryJpa;
 import ru.mentee.power.crm.spring.rest.fixed.InviteeController;
 import ru.mentee.power.crm.spring.service.EmployeeService;
 import ru.mentee.power.crm.spring.service.InviteeService;
 import ru.mentee.power.crm.spring.service.LeadService;
-import ru.mentee.power.crm.spring.repository.EmployeeRepository;
 
 @WebMvcTest(controllers = LeadController.class)
 @ActiveProfiles("test")
