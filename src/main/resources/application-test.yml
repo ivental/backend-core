@@ -16,6 +16,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
 
+  liquibase:
+    enabled: false
+
   h2:
     console:
       enabled: true
