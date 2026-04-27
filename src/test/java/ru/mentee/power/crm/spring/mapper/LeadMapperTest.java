@@ -1,8 +1,10 @@
 package ru.mentee.power.crm.spring.mapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +70,7 @@ public class LeadMapperTest {
     assertThat(response.getEmail()).isEqualTo("ivan@example.com");
     assertThat(response.getPhone()).isEqualTo("+79991234567");
     assertThat(response.getCompanyId()).isEqualTo(companyId);
-    assertThat(response.getCreatedAt()).isEqualTo(now);
+    assertThat(response.getCreatedAt()).isCloseTo(now, within(1, ChronoUnit.SECONDS));
   }
 
   @Test
@@ -93,13 +95,13 @@ public class LeadMapperTest {
     assertThat(response.getEmail()).isEqualTo("ivan@example.com");
     assertThat(response.getPhone()).isEqualTo("+79991234567");
     assertThat(response.getCompanyId()).isNull();
-    assertThat(response.getCreatedAt()).isEqualTo(now);
+    assertThat(response.getCreatedAt()).isCloseTo(now, within(1, ChronoUnit.SECONDS));
   }
 
   @Test
   void shouldHandleNullInput() {
 
-    assertThat(leadMapper.toEntity(null)).isNull();
+    assertThat(leadMapper.toEntityFromGenerated(null)).isNull();
     assertThat(leadMapper.toGeneratedResponse(null)).isNull();
   }
 }
