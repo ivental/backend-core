@@ -115,7 +115,7 @@ openApiGenerate {
     generatorName = "spring"
     inputSpec = project.file("src/main/resources/api/api-spec.yaml").absolutePath.replace('\\', '/')
     outputDir = "${buildDir}/generated"
-    apiPackage = "ru.mentee.power.crm.spring.rest"
+    apiPackage = "ru.mentee.power.crm.spring.rest.generated"
     modelPackage = "ru.mentee.power.crm.spring.dto.generated"
     configOptions = [
             interfaceOnly: "true",

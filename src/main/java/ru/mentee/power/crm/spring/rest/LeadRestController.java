@@ -30,7 +30,7 @@ public class LeadRestController implements LeadManagementApi {
   public ResponseEntity<List<LeadResponse>> getLeads() {
     List<LeadResponse> responses =
         leadService.findAll().stream()
-            .map(leadMapper::toGeneratedResponse) // ✅ используем маппер
+            .map(leadMapper::toGeneratedResponse)
             .collect(Collectors.toList());
     return ResponseEntity.ok(responses);
   }
