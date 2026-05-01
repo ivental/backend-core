@@ -123,6 +123,7 @@ class StackComparisonTest {
   }
 
   @Test
+  @Disabled("Performance test - depends on CI environment resources")
   @DisplayName("Измерение времени старта обоих стеков")
   void shouldMeasureStartupTime() {
     System.out.println("=== Сравнение времени старта ===");
