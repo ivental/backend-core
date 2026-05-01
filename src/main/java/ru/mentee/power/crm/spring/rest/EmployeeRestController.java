@@ -22,7 +22,7 @@ import ru.mentee.power.crm.spring.service.EmployeeService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/employees")
+@RequestMapping("/api/employee")
 public class EmployeeRestController {
   private final EmployeeService employeeService;
 

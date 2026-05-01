@@ -14,6 +14,5 @@ import lombok.NoArgsConstructor;
 public class CreateEmployeeRequest {
   @NotBlank(message = "Имя обязательно")
   private String name;
-
   private BigDecimal salary;
 }
