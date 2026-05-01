@@ -12,7 +12,7 @@ import ru.mentee.power.crm.spring.model.Lead;
 public interface LeadMapper {
 
   @Mapping(target = "id", ignore = true)
-  @Mapping(target = "company", ignore = true) // Нужно будет установить отдельно
+  @Mapping(target = "company", ignore = true)
   @Mapping(target = "createdAt", ignore = true)
   @Mapping(target = "version", ignore = true)
   @Mapping(target = "status", constant = "NEW")
