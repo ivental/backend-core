@@ -34,20 +34,23 @@ public class EmployeeRestController {
   }
 
   @PutMapping("/{id}/salary")
-  public EmployeeResponse updateSalary(@PathVariable UUID id, @RequestBody UpdateSalaryRequest request) {
+  public EmployeeResponse updateSalary(
+      @PathVariable UUID id, @RequestBody UpdateSalaryRequest request) {
     Employee updated = employeeService.updateSalary(id, request.getSalary());
     return new EmployeeResponse(updated.getId(), updated.getName(), updated.getSalary());
   }
 
   @GetMapping
   public Page<EmployeeResponse> getAll(Pageable pageable) {
-    return employeeService.getAll(pageable)
+    return employeeService
+        .getAll(pageable)
         .map(emp -> new EmployeeResponse(emp.getId(), emp.getName(), emp.getSalary()));
   }
 
   private Employee toEntity(CreateEmployeeRequest request) {
     return new Employee(null, request.getName(), request.getSalary());
   }
+
   @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(@PathVariable UUID id) {

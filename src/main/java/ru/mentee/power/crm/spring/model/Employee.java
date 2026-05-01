@@ -1,7 +1,6 @@
 package ru.mentee.power.crm.spring.model;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 import lombok.AccessLevel;
@@ -15,7 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Employee {
-  @Id @GeneratedValue(strategy = GenerationType.UUID) private UUID id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.UUID)
+  private UUID id;
+
   private String name;
   private BigDecimal salary;
 }

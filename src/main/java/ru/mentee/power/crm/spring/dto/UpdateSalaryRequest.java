@@ -1,7 +1,7 @@
 package ru.mentee.power.crm.spring.dto;
 
-import java.math.BigDecimal;
 import jakarta.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
